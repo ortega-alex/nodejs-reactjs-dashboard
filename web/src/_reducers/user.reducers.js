@@ -1,7 +1,7 @@
 import { UserConstants } from '../_constants/index';
 import Function from '../_helpers/Function';
 
-export default function _usuarios(state = {}, action) {
+export default function _usuario(state = {}, action) {
     switch (action.type) {
         case UserConstants.REQUEST:
             return {

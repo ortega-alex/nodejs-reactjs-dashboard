@@ -45,17 +45,7 @@ class App extends Component {
   async comprobarSesion() {
     AsyncStorage.getItem('login_dashboard', (err, res) => {
       if (!err && res && res != "undefined") {
-        var usuario = JSON.parse(res);
-        var date = new Date();
-        var vencimiento = new Date(usuario.fecha);
-        console.log(date, vencimiento);
-        if (usuario.fecha && vencimiento != date) {
-          this.setState({ login: true, cargando: false });
-        } else {
-          AsyncStorage.setItem('login_dashboard', undefined).then(() => {
-            this.setState({ login: false, cargando: false });
-          });
-        }
+        this.setState({ login: true, cargando: false });
       } else {
         this.setState({ login: false, cargando: false });
       }
@@ -64,7 +54,7 @@ class App extends Component {
 }
 
 const styles = {
-  component: { display: 'flex', height: '100vh', width: '100%' },
+  component: { display: 'flex', height: '100vh', width: '100%', overflow: 'hidden', backgroundColor: '#e0e0e0' },
   fondo: {
     display: "flex",
     width: "100%",

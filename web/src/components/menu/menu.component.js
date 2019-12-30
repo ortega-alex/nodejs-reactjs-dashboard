@@ -21,7 +21,9 @@ class Menu extends Component {
             colors_default: [
                 "#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3",
                 "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#ffeb3b",
-                "#000000", "#FFFFFF", "#ff9800", "#ff5722", "#795548", "#607d8b"]
+                "#000000", "#FFFFFF", "#ff9800", "#ff5722", "#795548", "#607d8b"
+            ],
+            user: {}
         }
     }
 
@@ -34,10 +36,16 @@ class Menu extends Component {
                 }
             }
         });
+        AsyncStorage.getItem('login_dashboard', (err, res) => {
+            if (!err && res && res != "undefined") {
+                const user = JSON.parse(res);
+                this.setState({ user });
+            }
+        });
     }
 
     render() {
-        const { pathname, collapsed, cargando, background, colors, color } = this.state;
+        const { pathname, collapsed, cargando, background, colors, color, user } = this.state;
         return (
             <HashRouter>
                 <MenuAntd
@@ -48,7 +56,7 @@ class Menu extends Component {
                 >
                     <MenuAntd.Item key="0" onClick={this.toggleCollapsed} style={{ color: color }}>
                         <Icon type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'} />
-                        <span style={styles.title}> Menú Principal  </span>
+                        <span className="title"> Menú Principal  </span>
                     </MenuAntd.Item>
 
                     <MenuAntd.Item key="/">
@@ -61,7 +69,7 @@ class Menu extends Component {
                 </MenuAntd>
 
                 {this.state.collapsed == false &&
-                    <div style={styles.botonera}>
+                    <div className="botonera">
                         <div className="row mb-1">
                             {colors &&
                                 <div className="col-6">
@@ -88,7 +96,7 @@ class Menu extends Component {
                             </div>
                             {!colors &&
                                 <div className="col-6">
-                                    <Tooltip title="Cerrar Sesión" style={{ marginLeft: '1%' }}>
+                                    <Tooltip title={`Cerrar Sesión, ${user.nombre}`}>
                                         <Button disabled={cargando} type="primary" onClick={() => { this.cerrarSession() }}>
                                             <Icon type="logout" />
                                         </Button>
@@ -125,17 +133,6 @@ class Menu extends Component {
         var menu = { background: this.state.background, color: color.hex };
         AsyncStorage.setItem('menu_dashborad', JSON.stringify(menu));
     };
-}
-
-const styles = {
-    menu: { height: '100%', maxWidth: '20%', backgroundColor: '#ff5722' },
-    title: { margin: 'auto', fontSize: 14, fontWeight: 'bold' },
-    botonera: {
-        position: 'absolute',
-        bottom: '5%',
-        left: '1%'
-    },
-    colunm: { display: 'flex', flex: 1, flexDirection: 'colunm', width: '50%' }
 }
 
 export default Menu;

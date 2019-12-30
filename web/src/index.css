@@ -1,32 +1,123 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
 .login-view {
-  display: flex;
-  width: 25%;
-  justify-content: center;
-  align-items: 'center';
-  background-color: rgba(227, 231, 233, 0.5);
-  /* background-color: white; */
-  border-radius: 10px;
-  flex-direction: column;
-  box-shadow: 0px 1px 4px #909497;
-  border: none;
-  border-color: black;
-  outline: none;
-  padding: 1%;
+    display: flex;
+    width: 25%;
+    justify-content: center;
+    align-items: 'center';
+    background-color: rgba(227, 231, 233, 0.5);
+    /* background-color: white; */
+    border-radius: 10px;
+    flex-direction: column;
+    box-shadow: 0px 1px 4px #909497;
+    border: none;
+    border-color: black;
+    outline: none;
+    padding: 1%;
 }
 
 @media screen and (max-width: 480px) {
-  .login-view {
+    .login-view {
+        width: 90%;
+    }
+}
+
+.title {
+    margin: auto;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.botonera {
+    position: absolute;
+    bottom: 5%;
+    left: 1%;
+}
+
+.target {
+    position: relative;
     width: 90%;
-  }
+    height: 98%;
+    margin: 1% 2%;
+    padding: 4% 1%;
+    margin-bottom: 10px;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0px 1px 4px #909497;
+    border-radius: 1px;
+    border: none;
+    border-color: black;
+    outline: none;
+    color: white;
+}
+
+.icon-target {
+    position: absolute;
+    font-size: 2em;
+    top: 30%;
+    left: 45%;
+    padding-top: 30%;
+    opacity: 0;
+    padding: 0px;
+}
+
+.avatar {
+    border-radius: 50%;
+    background-position: 50%;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+}
+
+.avatar:hover {
+    opacity: 0.3;
+}
+
+.avatar:hover+.icon-target {
+    opacity: 1;
+}
+
+.icon-target:hover {
+    opacity: 1;
+    color: black;
+}
+
+.fondo-promerica {
+    background: #56ab2f;
+    background: -webkit-linear-gradient(to right, #79c15d, #0d703a);
+    background: linear-gradient(to right, #79c15d, #0d703a);
+}
+
+.fondo-bi {
+    background: #129be0bf;
+    background: -webkit-linear-gradient(to right, #129be0bf, #13b2ff);
+    background: linear-gradient(to right, #129be0bf, #13b2ff);
+}
+
+.fondo-rojo {
+    background: #fbc02d;
+    background: -webkit-linear-gradient(to right, #ba000d, #f44330);
+    background: linear-gradient(to right, #ba000d, #f44330);
+}
+
+.fondo-default {
+    background: #304352;
+    background: -webkit-linear-gradient(to right, #d7d2cc, #304352);
+    background: linear-gradient(to right, #d7d2cc, #304352);
+}
+
+.center-vertical {
+    margin: 0.2% -2% 0 2%;
+}
+
+.progregres-green {
+    background-color: #4355a1!important;
 }

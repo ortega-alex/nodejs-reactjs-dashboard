@@ -1,5 +1,6 @@
-import mysql from 'promise-mysql';
+import mysql from 'mysql';
 require('custom-env').env();
+
 const db_mysql = {
     config_100: {
         host: process.env.MYSQL_100_HOST,

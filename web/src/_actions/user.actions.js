@@ -49,9 +49,9 @@ function logout() {
 }
 
 const UsuarioActions = {
-   login,
-   changePass,
-   logout
+    login,
+    changePass,
+    logout
 };
 
 export default UsuarioActions;
