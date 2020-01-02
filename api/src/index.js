@@ -1,7 +1,7 @@
 import app from './config/app';
 import '@babel/polyfill';
 
-const http = require('http').Server(app);
+const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 require('./config/socket')(io, app);
 

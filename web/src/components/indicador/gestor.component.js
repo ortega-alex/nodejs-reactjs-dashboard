@@ -55,7 +55,6 @@ class Gestor extends Component {
                                         className="avatar"
                                         alt="Sin Imagen"
                                     />
-                                    <Icon type="minus-circle" className="icon-target" />
                                 </div>
                                 <div className="col-10" style={{ height: _height / gestores.length }} >
                                     <p className="m-0 p-0" style={{ fontSize: '1vh' }}>
@@ -87,7 +86,7 @@ class Gestor extends Component {
                                         alt="Sin Imagen"
                                         onClick={() => this.props.changeView(1)}
                                     />
-                                    <Icon type="minus-circle" className="icon-target" onClick={() => this.props.changeView(1)} />
+                                    <Icon type="zoom-out" className="icon-target" onClick={() => this.props.changeView(1)} />
                                     <p className="h6 m-0 p-0 w-100">{gestores[0].nombre_completo}</p>
                                     <p className="m-0 p-0 w-100">primer lugar</p>
                                     <br />
@@ -107,7 +106,7 @@ class Gestor extends Component {
                                         alt="Sin Imagen"
                                         onClick={() => this.props.changeView(1)}
                                     />
-                                    <Icon type="minus-circle" className="icon-target" onClick={() => this.props.changeView(1)} />
+                                    <Icon type="zoom-out" className="icon-target" onClick={() => this.props.changeView(1)} />
                                     <p className="h6 m-0 p-0 w-100">{gestores[gestores.length - 1].nombre_completo}</p>
                                     <p className="m-0 p-0 w-100">Ultimo lugar</p>
                                     <br />
@@ -166,7 +165,7 @@ class Gestor extends Component {
                                             alt="Sin Imagen"
                                             onClick={() => this.props.changeView(1)}
                                         />
-                                        <Icon type="minus-circle" className="icon-target" onClick={() => this.props.changeView(1)} />
+                                        <Icon type="zoom-out" className="icon-target" onClick={() => this.props.changeView(1)} />
                                         <p className="h6 m-0 p-0 w-100">{gestores[0].nombre_completo}</p>
                                         <p className="m-0 p-0 w-100">primer lugar</p>
                                         <br />
@@ -187,7 +186,7 @@ class Gestor extends Component {
                                             alt="Sin Imagen"
                                             onClick={() => this.props.changeView(1)}
                                         />
-                                        <Icon type="minus-circle" className="icon-target" onClick={() => this.props.changeView(1)} />
+                                        <Icon type="zoom-out" className="icon-target" onClick={() => this.props.changeView(1)} />
                                         <p className="h6 m-0 p-0 w-100">{gestores[gestores.length - 1].nombre_completo}</p>
                                         <p className="m-0 p-0 w-100">Ultimo lugar</p>
                                         <br />
@@ -203,7 +202,6 @@ class Gestor extends Component {
     }
 
     handleView() {
-        console.log("entra");
         this.setState({ view: !this.state.view })
     }
 }

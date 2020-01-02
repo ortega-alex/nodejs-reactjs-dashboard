@@ -35,7 +35,7 @@ class Supervisor extends Component {
                                         alt="Sin Imagen"
                                         onClick={() => this.props.changeView(0, res.id_supervisor)}
                                     />
-                                    <Icon type="plus-circle" className="icon-target" onClick={() => this.props.changeView(0, res.id_supervisor)} />
+                                    <Icon type="zoom-in" className="icon-target" onClick={() => this.props.changeView(0, res.id_supervisor)} />
                                     <p className="h6 m-0 p-0 w-100">{res.primer_nombre + ' ' + res.primer_apellido}</p>
                                     <p className="m-0 p-0 w-100">{res.departamento}</p>
                                     <div className="row text-center m-4">

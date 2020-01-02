@@ -6,6 +6,7 @@ import { AsyncStorage } from 'AsyncStorage';
 
 import UserActions from '../../_actions/user.actions';
 import Indicador from '../indicador/indicador.component';
+import Message from '../msj/message.component';
 
 class Menu extends Component {
 
@@ -66,6 +67,13 @@ class Menu extends Component {
                         </Link>
                     </MenuAntd.Item>
 
+                    <MenuAntd.Item key="/msj" className="float-right">
+                        <Link to="/msj" onClick={() => { this.setState({ pathname: "/msj" }) }} style={{ color: color }}>
+                            <Icon type="message" />
+                            <span>Mensajeria</span>
+                        </Link>
+                    </MenuAntd.Item>
+
                 </MenuAntd>
 
                 {this.state.collapsed == false &&
@@ -108,6 +116,7 @@ class Menu extends Component {
                 }
 
                 <Route path="/" exact component={Indicador} />
+                <Route path="/msj" component={Message} />
             </HashRouter>
         );
     }
