@@ -25,11 +25,31 @@ function getFondo(id_dep) {
     return (arr[id_dep]) ? arr[id_dep] : 'fondo-default';
 }
 
+function ordenarArrDesc(arr, name) {
+    arr.sort(function (a, b) {
+        if (a[name] < b[name]) {
+            return 1;
+        }
+        if (a[name] > b[name]) {
+            return -1;
+        }
+        return 0;
+    });
+    return arr;
+}
+
+function commaSeparateNumber(val) {
+    while (/(\d+)(\d{3})/.test(val.toString())) { val = val.toString().replace(/(\d+)(\d{3})/, '$1' + ',' + '$2'); }
+    return val;
+}
+
 const Function = {
     message,
     remplazarEspacios_,
     getImage,
-    getFondo
+    getFondo,
+    ordenarArrDesc,
+    commaSeparateNumber
 }
 
 export default Function;

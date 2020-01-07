@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Function from './Function';
 
 class Progress extends Component {
     constructor(props) {
@@ -20,10 +21,10 @@ class Progress extends Component {
     }
 
     render() {
-        const { height, width, aplicar } = this.props;
+        const { height, width, direccion, tipo, indicador } = this.props;
         const { progress } = this.state;
         return (
-            aplicar == 0 ?
+            direccion == 0 ?
                 <div style={{ height: '100%', width: '100%' }}>
                     <div
                         style={{
@@ -32,7 +33,7 @@ class Progress extends Component {
                             backgroundColor: progress < 33 ? '#f44336' : (progress < 66 ? '#f9a825' : '#66bb6a')
                         }}>
                     </div>
-                    <p className="m-0 p-0" style={{ fontSize: '1vh' }}><b>{progress}%</b></p>
+                    <p className="m-0 p-0" style={{ fontSize: '1vh' }}><b>{tipo} {Function.commaSeparateNumber(indicador)}</b></p>
                 </div>
 
                 :
@@ -57,7 +58,7 @@ class Progress extends Component {
                             textAlign: 'center'
                         }}
                     >
-                        <b>{progress}%</b>
+                        <b>{tipo} {Function.commaSeparateNumber(indicador)}</b>
                     </p>
                 </div>
         );
@@ -65,10 +66,11 @@ class Progress extends Component {
 
     handleAumentarPorcentaje() {
         const { progress } = this.state;
-        const { indicador } = this.props;
-        var _progress = (progress + 5);
+        const { indicador, total } = this.props;
+        var porcentaje = (indicador > 0 && total > 0) ? ((indicador * 100) / total) : 0;
+        var _progress = (progress + 1);
         this.setState({ progress: _progress });
-        if (_progress >= indicador) {
+        if (_progress >= porcentaje) {
             clearInterval(this.state.time);
         }
     }

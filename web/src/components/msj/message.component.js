@@ -34,7 +34,7 @@ class Message extends Component {
                 <div className="row">
                     <div className="col-md-4 offset-md-4 text-center">
                         <h3>Mensajes</h3>
-                        <p className="p-0 m-0">Permite la transmision de mensajes instantaneos a todos a un televisor conectado</p>
+                        <p className="p-0 m-0">Permite la transmision de mensajes instantaneos a todos o a un televisor conectado</p>
                         <br />
                     </div>
                 </div>

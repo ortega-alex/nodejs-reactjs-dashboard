@@ -20,7 +20,7 @@ export default function _indicador(state = {}, action) {
         case IndicadorConstants.GET_GTR_SUCCESS:
             return {
                 ...state,
-                gestores: action.gestores
+                indicadores: action.data.indicadores
             }
         default:
             return state

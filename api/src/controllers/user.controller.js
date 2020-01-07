@@ -1,13 +1,6 @@
 import db_mssql from '../config/db_mssql';
 import db_mysql from '../config/db_mysql';
-
-export function encryptPassword(pass) {
-    var sum = 0;
-    for (let i = 0; i < pass.length; i++) {
-        sum += pass.charCodeAt(i);
-    }
-    return sum;
-}
+import { encryptPassword } from '../config/helper';
 
 export async function login(req, res) {
     try {

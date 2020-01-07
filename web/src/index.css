@@ -97,9 +97,9 @@ code {
 }
 
 .fondo-bi {
-    background: #129be0bf;
-    background: -webkit-linear-gradient(to right, #129be0bf, #13b2ff);
-    background: linear-gradient(to right, #129be0bf, #13b2ff);
+    background: #0187cabf;
+    background: -webkit-linear-gradient(to right, #003d7abf, #13b2ff);
+    background: linear-gradient(to right, #003d7abf, #13b2ff);
 }
 
 .fondo-rojo {
