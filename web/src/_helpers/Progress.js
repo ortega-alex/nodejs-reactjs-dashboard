@@ -30,7 +30,7 @@ class Progress extends Component {
                         style={{
                             height: height,
                             width: `${progress}%`,
-                            backgroundColor: progress < 33 ? '#f44336' : (progress < 66 ? '#f9a825' : '#66bb6a')
+                            backgroundColor: this.handleColor()
                         }}>
                     </div>
                     <p className="m-0 p-0" style={{ fontSize: '1vh' }}><b>{tipo} {Function.commaSeparateNumber(indicador)}</b></p>
@@ -42,7 +42,7 @@ class Progress extends Component {
                         style={{
                             width: width,
                             height: `${progress}%`,
-                            backgroundColor: progress < 33 ? '#f44336' : (progress < 66 ? '#f9a825' : '#66bb6a'),
+                            backgroundColor: this.handleColor(),
                             position: 'absolute',
                             bottom: '8%',
                             marginLeft: '33%'
@@ -58,7 +58,7 @@ class Progress extends Component {
                             textAlign: 'center'
                         }}
                     >
-                        <b>{tipo} {Function.commaSeparateNumber(indicador)}</b>
+                        <b> {tipo} {Function.commaSeparateNumber(indicador)}</b>
                     </p>
                 </div>
         );
@@ -66,13 +66,22 @@ class Progress extends Component {
 
     handleAumentarPorcentaje() {
         const { progress } = this.state;
-        const { indicador, total } = this.props;
+        const { indicador, total, invertir } = this.props;
         var porcentaje = (indicador > 0 && total > 0) ? ((indicador * 100) / total) : 0;
+        if (!invertir) {
+            porcentaje = (100 - porcentaje);
+        }
         var _progress = (progress + 1);
         this.setState({ progress: _progress });
         if (_progress >= porcentaje) {
             clearInterval(this.state.time);
         }
+    }
+
+    handleColor() {
+        const { progress } = this.state;
+        var  color = (progress < 33) ? '#f44336' : (progress < 66 ? '#f9a825' : '#66bb6a');
+        return color;
     }
 }
 
