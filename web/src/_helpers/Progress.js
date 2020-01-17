@@ -37,21 +37,19 @@ class Progress extends Component {
                 </div>
 
                 :
-                <div style={{ height: '100%', width: '100%', position: 'relative' }}>
+                <div style={{ height: '100%', width: '100%', position: 'relative', display: 'flex', justifyContent: 'center' }}>
                     <div
                         style={{
                             width: width,
-                            height: `${progress}%`,
+                            height: `${progress - 20}%`,
                             backgroundColor: this.handleColor(),
                             position: 'absolute',
-                            bottom: '8%',
-                            marginLeft: '33%'
+                            bottom: '13%'
                         }}>
                     </div>
                     <p
                         className="m-0 p-0"
                         style={{
-                            fontSize: '1vh',
                             position: 'absolute',
                             bottom: 0,
                             width: '100%',

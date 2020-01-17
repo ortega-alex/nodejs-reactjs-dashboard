@@ -5,6 +5,8 @@ import { Icon, Progress as ProgressAntd } from 'antd';
 import IndicadorActions from '../../_actions/indicador.actions';
 import Function from '../../_helpers/Function';
 import Progress from '../../_helpers/Progress';
+import Ranking from './ranking.component';
+import Target from '../../_helpers/Target';
 
 const _height = window.innerHeight;
 const _width = window.innerWidth;
@@ -16,14 +18,15 @@ class Gestor extends Component {
             interval: null,
             time: null,
             view: true,
-            _ind: 0
+            _ind: 0,
+            _gestor: 3
         };
     }
 
     componentDidMount() {
         this.props.dispatch(IndicadorActions.getGestoresSupervisor(this.props.id_supervisor));
-        this.setState({ time: setInterval(() => { this.handleGetIndicador() }, 1800000) });
-        this.setState({ time: setInterval(() => { this.handleView() }, 5000) });
+        // this.setState({ time: setInterval(() => { this.handleGetIndicador() }, 1800000) });
+        this.setState({ time: setInterval(() => { this.handleView() }, 10000) });
     }
 
     componentWillUnmount() {
@@ -35,144 +38,10 @@ class Gestor extends Component {
         const { indicadores } = this.props;
         return (
             <div style={{ width: _width, height: _height, position: 'relative' }}>
-                {view == true ?
-                    this.handleGetHorizontal()
+                {indicadores && indicadores.length > 0 &&
+                    view ?
+                    <Ranking indicador={indicadores[0]} changeView={this.props.changeView()} />
                     : this.handleGetVertical()
-                }
-                {indicadores &&
-                    <div style={{ position: 'absolute', top: '20%', left: '40%' }}>
-                        <ProgressAntd
-                            type="circle"
-                            percent={90}
-                            format={() =>
-                                <div style={{ fontSize: '1rem' }}>
-                                    <p className="m-0 p-0"><b>{indicadores[_ind].titulo}</b></p>
-                                    {indicadores[_ind].tipo == 'Q' ?
-                                        <p className="m-0 p-0">{indicadores[_ind].tipo + ' ' + Function.commaSeparateNumber(parseFloat(indicadores[_ind].total).toFixed(2))}</p>
-                                        :
-                                        <p className="m-0 p-0">{indicadores[_ind].tipo + ' ' + indicadores[_ind].total}</p>
-                                    }
-                                </div>
-                            }
-                            width={150}
-                            showInfo={true}
-                        />
-                    </div>
-                }
-            </div>
-        );
-    }
-
-    handleGetHorizontal() {
-        const { _ind } = this.state;
-        const { indicadores } = this.props;
-        return (
-            <div>
-                {indicadores &&
-                    <div className="row">
-                        <div className="col-8">
-                            {indicadores[_ind].gestores.map((res, i) => {
-                                return (
-                                    <div className="row" key={i}>
-                                        <div
-                                            className="col-2 ml-2" style={{ maxWidth: (_height / indicadores[_ind].gestores.length) + 10 }}
-                                            onClick={() => {
-                                                this.handleClearInterval();
-                                                this.props.changeView(1);
-                                            }}
-                                        >
-                                            <img
-                                                height={_height / indicadores[_ind].gestores.length}
-                                                width={_height / indicadores[_ind].gestores.length}
-                                                src={Function.getImage(res.nombre_completo)}
-                                                className="avatar"
-                                                alt="Sin Imagen"
-                                            />
-                                        </div>
-                                        <div className="col-10" style={{ height: _height / indicadores[_ind].gestores.length }} >
-                                            <p className="m-0 p-0" style={{ fontSize: '1vh' }}>
-                                                <b>{res.nombres.split(' ')[0]} {res.apellidos.split(' ')[0]}</b>
-                                            </p>
-                                            <Progress
-                                                height="33%"
-                                                width="0"
-                                                direccion={0}
-                                                indicador={res.indicador}
-                                                tipo={indicadores[_ind].tipo}
-                                                total={indicadores[_ind].total}
-                                                invertir={indicadores[_ind].titulo == 'Ranking' ? false : true}
-                                            />
-                                        </div>
-                                    </div>
-                                )
-                            })}
-                        </div>
-                        <div className="col-3">
-                            <div className="row">
-                                <div className="col-12 text-center">
-                                    <br />
-                                    <p className="m-0 p-0 h3">{indicadores[_ind].titulo}</p>
-                                    <p className="p-0 m-0">{indicadores[_ind].descr}</p>
-                                </div>
-                            </div>
-                            {indicadores[_ind].gestores.length > 0 &&
-                                <div className="row">
-                                    <div className="col-12 m-0 p-0">
-                                        <div className={`target ${Function.getFondo(4)}`}>
-                                            <img
-                                                height="150"
-                                                width="150"
-                                                src={Function.getImage(indicadores[_ind].gestores[0].nombre_completo)}
-                                                className="avatar"
-                                                alt="Sin Imagen"
-                                                onClick={() => {
-                                                    this.handleClearInterval();
-                                                    this.props.changeView(1);
-                                                }}
-                                            />
-                                            <Icon
-                                                type="zoom-out"
-                                                className="icon-target"
-                                                onClick={() => {
-                                                    this.handleClearInterval();
-                                                    this.props.changeView(1);
-                                                }} />
-                                            <p className="h6 m-0 p-0 w-100">{indicadores[_ind].gestores[0].nombre_completo}</p>
-                                            <p className="m-0 p-0 w-100">PRIMER LUGAR</p>
-                                            <p className="m-0 p-0 w-100 h5">{indicadores[_ind].tipo} {Function.commaSeparateNumber(indicadores[_ind].gestores[0].indicador)}</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="col-12 m-0 p-0">
-                                        <div className={`target ${Function.getFondo(13)}`} >
-                                            <img
-                                                height="150"
-                                                width="150"
-                                                src={Function.getImage(indicadores[_ind].gestores[indicadores[_ind].gestores.length - 1].nombre_completo)}
-                                                className="avatar"
-                                                alt="Sin Imagen"
-                                                onClick={() => {
-                                                    this.handleClearInterval();
-                                                    this.props.changeView(1);
-                                                }}
-                                            />
-                                            <Icon
-                                                type="zoom-out"
-                                                className="icon-target"
-                                                onClick={() => {
-                                                    this.handleClearInterval();
-                                                    this.props.changeView(1);
-                                                }}
-                                            />
-                                            <p className="h6 m-0 p-0 w-100">{indicadores[_ind].gestores[indicadores[_ind].gestores.length - 1].nombre_completo}</p>
-                                            <p className="m-0 p-0 w-100">ULTIMO LUGAR</p>
-                                            <p className="m-0 p-0 w-100 h5">{indicadores[_ind].tipo} {Function.commaSeparateNumber(indicadores[_ind].gestores[indicadores[_ind].gestores.length - 1].indicador)}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
                 }
             </div>
         );
@@ -186,29 +55,38 @@ class Gestor extends Component {
                 {indicadores &&
                     <div style={{ width: _width, height: _height }}>
                         <div
-                            style={{ height: (_height - 350), display: 'flex', direction: "row" }}
+                            style={{ height: '45%', display: 'flex', direction: "row", width: '100%', overflowX: 'auto' }}
                             onClick={() => {
                                 this.handleClearInterval();
                                 this.props.changeView(1);
                             }}
+                            ref={(el) => { this.DivGestores = el }}
                         >
                             {indicadores[_ind].gestores.map((res, i) => {
                                 return (
-                                    <div key={i} style={{ height: '100%', width: (_width / indicadores[_ind].gestores.length - 8), position: 'relative', textAlign: 'center' }} >
+                                    <div key={i} className="indicadores-gestores" >
                                         <img
-                                            height={_height / indicadores[_ind].gestores.length}
-                                            width={_height / indicadores[_ind].gestores.length}
+                                            height="150"
+                                            width="150"
                                             src={Function.getImage(res.nombre_completo)}
                                             className="avatar"
                                             alt="Sin Imagen"
                                         />
                                         <p className="m-0 p-0">
-                                            <b>{res.nombres.split(' ')[0]} {res.apellidos.split(' ')[0]}</b>
+                                            <b> #{i + 1} {res.nombres.split(' ')[0]} {res.apellidos.split(' ')[0]}</b>
                                         </p>
-                                        <div style={{ position: 'absolute', bottom: 0, height: '60%', width: '100%', textAlign: 'center' }}>
+                                        <div
+                                            style={{
+                                                position:
+                                                    'absolute',
+                                                bottom: 0,
+                                                height: '50%',
+                                                width: '100%',
+                                            }}
+                                        >
                                             <Progress
                                                 height="0"
-                                                width="33%"
+                                                width="25%"
                                                 direccion={1}
                                                 indicador={res.indicador}
                                                 tipo={indicadores[_ind].tipo}
@@ -219,73 +97,39 @@ class Gestor extends Component {
                                     </div>
                                 )
                             })}
+                            {indicadores &&
+                                <div style={{ minWidth: '8%' }}></div>
+                            }
                         </div>
-                        <div style={{ height: 300 }}>
+                        <div style={{ height: '55%' }}>
                             {indicadores &&
                                 <div className="row text-center">
                                     <div className="col-md-4 offset-md-4">
-                                        <p className="m-0 p-0 h3">{indicadores[_ind].titulo}</p>
+                                        <h4 className="m-0 p-0">{indicadores[_ind].titulo}</h4>
                                         <p className="p-0 m-0">{indicadores[_ind].descr}</p>
+                                        <p className="p-0 m-0 h6">{indicadores[_ind].tipo} {indicadores[_ind].total}</p>
                                     </div>
                                 </div>
                             }
                             {indicadores[_ind].gestores.length > 0 &&
                                 <div className="row">
-                                    <div className="col-4 offset-md-2">
-                                        <div className="col-12 m-0 p-0">
-                                            <div className={`target ${Function.getFondo(4)}`}>
-                                                <img
-                                                    height="150"
-                                                    width="150"
-                                                    src={Function.getImage(indicadores[_ind].gestores[0].nombre_completo)}
-                                                    className="avatar"
-                                                    alt="Sin Imagen"
-                                                    onClick={() => {
-                                                        this.handleClearInterval();
-                                                        this.props.changeView(1);
-                                                    }}
-                                                />
-                                                <Icon
-                                                    type="zoom-out"
-                                                    className="icon-target"
-                                                    onClick={() => {
-                                                        this.handleClearInterval();
-                                                        this.props.changeView(1);
-                                                    }}
-                                                />
-                                                <p className="h6 m-0 p-0 w-100">{indicadores[_ind].gestores[0].nombre_completo}</p>
-                                                <p className="m-0 p-0 w-100">PRIMER LUGAR</p>
-                                                <p className="m-0 p-0 w-100 h5">{indicadores[_ind].tipo} {Function.commaSeparateNumber(indicadores[_ind].gestores[0].indicador)}</p>
-                                            </div>
-                                        </div>
+                                    <div className="col-3 offset-md-3">
+                                        <Target
+                                            lugar={1}
+                                            tipo={indicadores[_ind].tipo}
+                                            usuario={indicadores[_ind].gestores[0]}
+                                            descripcion="Primer lugar del Equipo"
+                                            changeView={this.props.changeView()}
+                                        />
                                     </div>
-                                    <div className="col-4">
-                                        <div className="col-12 m-0 p-0">
-                                            <div className={`target ${Function.getFondo(13)}`} >
-                                                <img
-                                                    height="150"
-                                                    width="150"
-                                                    src={Function.getImage(indicadores[_ind].gestores[indicadores[_ind].gestores.length - 1].nombre_completo)}
-                                                    className="avatar"
-                                                    alt="Sin Imagen"
-                                                    onClick={() => {
-                                                        this.handleClearInterval();
-                                                        this.props.changeView(1);
-                                                    }}
-                                                />
-                                                <Icon
-                                                    type="zoom-out"
-                                                    className="icon-target"
-                                                    onClick={() => {
-                                                        this.handleClearInterval();
-                                                        this.props.changeView(1);
-                                                    }}
-                                                />
-                                                <p className="h6 m-0 p-0 w-100">{indicadores[_ind].gestores[indicadores[_ind].gestores.length - 1].nombre_completo}</p>
-                                                <p className="m-0 p-0 w-100">ULTIMO LUGAR</p>
-                                                <p className="m-0 p-0 w-100 h5">{indicadores[_ind].tipo} {Function.commaSeparateNumber(indicadores[_ind].gestores[indicadores[_ind].gestores.length - 1].indicador)}</p>
-                                            </div>
-                                        </div>
+                                    <div className="col-3">
+                                        <Target
+                                            lugar={3}
+                                            tipo={indicadores[_ind].tipo}
+                                            usuario={indicadores[_ind].gestores[indicadores[_ind].gestores.length - 1]}
+                                            descripcion="Ultimo lugar del Equipo"
+                                            changeView={this.props.changeView()}
+                                        />
                                     </div>
                                 </div>
                             }
@@ -296,16 +140,29 @@ class Gestor extends Component {
         );
     }
 
-    handleGetIndicador() {
-        const { id_supervisor } = this.props;
-        this.props.dispatch(IndicadorActions.getGestoresSupervisor(id_supervisor));
-    }
-
     handleView() {
+        this.setState({ view: false });
         var { _ind } = this.state;
         const { indicadores } = this.props;
         var _indicador = (_ind == (indicadores.length - 1)) ? 0 : _ind + 1;
-        this.setState({ _ind: _indicador, view: !this.state.view })
+        if (this.DivGestores) {
+            this.DivGestores.scrollLeft = 0;
+            setTimeout(() => {
+                this.DivGestores.scrollLeft = _width - 100;
+            }, 3333);
+            setTimeout(() => {
+                this.DivGestores.scrollLeft = this.DivGestores.scrollHeight * 10;
+            }, 6666);
+        }
+        this.setState({ _ind: _indicador });
+    }
+
+    handleDivGestores() {
+        const { _gestor } = this.state;
+        if (this.DivGestores) {
+            this.DivGestores.scrollLeft = (this.DivGestores.scrollHeight * _gestor);
+        }
+        this.setState({ _gestor: _gestor + 3 });
     }
 
     handleClearInterval() {

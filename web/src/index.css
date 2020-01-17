@@ -192,3 +192,34 @@ code {
     background-image: linear-gradient(rgba(0, 0, 0, 1) 0%, transparent 100%);
     pointer-events: none;
 }
+
+
+.fondo-primer-success {
+    background: #56ab2f;
+    background: -webkit-linear-gradient(to right, #0d703a, #79c15d);
+    background: linear-gradient(to right, #0d703a, #79c15d);
+}
+
+.fondo-primer-warning {
+    background: #fff019;
+    background: -webkit-linear-gradient(to right, #1565c0, #1e88e5);
+    background: linear-gradient(to right, #1565c0, #1e88e5);
+}
+
+.fondo-primer-danger {
+    background: #ba000d;
+    background: -webkit-linear-gradient(to right, #ba000d, #f44330);
+    background: linear-gradient(to right, #ba000d, #f44330);
+}
+
+.progress-ranking{
+    height: 100%;
+    font-size: 1.3rem;
+}
+
+.indicadores-gestores{
+    position: relative;
+    height: 100%;
+    min-width: 23% !important;
+    text-align: center;
+}

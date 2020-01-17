@@ -36,10 +36,11 @@ export async function getGestoresPorSuper(req, res) {
         if (!id_supervisor) return res.json({ err: true, msj: 'Falta informacion!' });
 
         var indicadores = [
+            { tipo: '#', titulo: 'Ranking', descr: 'Breve descripción acerca del indicador', total: 0, gestores: [] },
+            { tipo: '#', titulo: 'Ranking', descr: 'Breve descripción acerca del indicador', total: 0, gestores: [] },
             { tipo: '#', titulo: 'Controles', descr: 'Breve descripción acerca del indicador', total: 0, gestores: [] }, 
             { tipo: 'Q', titulo: 'Generación', descr: 'Breve descripción acerca del indicador', total: 0, gestores: [] },
-            { tipo: 'Q', titulo: 'Recuperación Acumulada', descr: 'Breve descripción acerca del indicador', total: 0, gestores: [] },
-            { tipo: '#', titulo: 'Ranking', descr: 'Breve descripción acerca del indicador', total: 0, gestores: [] }
+            { tipo: 'Q', titulo: 'Recuperación Acumulada', descr: 'Breve descripción acerca del indicador', total: 0, gestores: [] }          
         ];
  
         var strQuery = `SELECT a.id_usuario, 
@@ -73,39 +74,48 @@ export async function getGestoresPorSuper(req, res) {
                 nombres: element.nombres, 
                 apellidos: element.apellidos,   
                 nombre_completo: element.nombre_completo,
-                indicador: element.controles
+                indicador: parseInt(element.posicion)
             });
             indicadores[1].gestores.push({ 
                 id_usuario: element.id_usuario,
                 nombres: element.nombres, 
                 apellidos: element.apellidos,   
                 nombre_completo: element.nombre_completo,
-                indicador: element.generacion
+                indicador: parseInt(element.posicion)
             });
             indicadores[2].gestores.push({ 
                 id_usuario: element.id_usuario,
                 nombres: element.nombres, 
                 apellidos: element.apellidos,   
                 nombre_completo: element.nombre_completo,
-                indicador: element.recuperacion
+                indicador: element.controles
             });
             indicadores[3].gestores.push({ 
                 id_usuario: element.id_usuario,
                 nombres: element.nombres, 
                 apellidos: element.apellidos,   
                 nombre_completo: element.nombre_completo,
-                indicador: parseInt(element.posicion)
+                indicador: element.generacion
             });
-            indicadores[0].total += element.controles;
-            indicadores[1].total += element.generacion;
-            indicadores[2].total += parseFloat(element.recuperacion);
-            indicadores[3].total = parseInt(element.de);
+            indicadores[4].gestores.push({ 
+                id_usuario: element.id_usuario,
+                nombres: element.nombres, 
+                apellidos: element.apellidos,   
+                nombre_completo: element.nombre_completo,
+                indicador: element.recuperacion
+            });           
+            indicadores[0].total = parseInt(element.de);
+            indicadores[1].total = parseInt(element.de);
+            indicadores[2].total += element.controles;
+            indicadores[3].total += element.generacion;
+            indicadores[4].total += parseFloat(element.recuperacion);            
         });
 
-        ordenarArrDesc(indicadores[0].gestores, 'indicador');
-        ordenarArrDesc(indicadores[1].gestores, 'indicador');
+        ordenarArrAcs(indicadores[0].gestores, 'indicador');
+        ordenarArrAcs(indicadores[1].gestores, 'indicador');
         ordenarArrDesc(indicadores[2].gestores, 'indicador');
-        ordenarArrAcs(indicadores[3].gestores, 'indicador');
+        ordenarArrDesc(indicadores[3].gestores, 'indicador');
+        ordenarArrDesc(indicadores[4].gestores, 'indicador');
        
         return res.status(200).json({
             message: 'success',

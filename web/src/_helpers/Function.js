@@ -16,6 +16,9 @@ function getImage(name) {
 
 function getFondo(id_dep) {
     const arr = {
+        1: 'fondo-primer-success',
+        2: 'fondo-primer-warning',
+        3: 'fondo-primer-danger',
         4: 'fondo-promerica',
         12: 'fondo-bi',
         13: 'fondo-rojo',
