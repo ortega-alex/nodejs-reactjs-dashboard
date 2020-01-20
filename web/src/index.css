@@ -90,30 +90,6 @@ code {
     color: black;
 }
 
-.fondo-promerica {
-    background: #56ab2f;
-    background: -webkit-linear-gradient(to right, #79c15d, #0d703a);
-    background: linear-gradient(to right, #79c15d, #0d703a);
-}
-
-.fondo-bi {
-    background: #0187cabf;
-    background: -webkit-linear-gradient(to right, #003d7abf, #13b2ff);
-    background: linear-gradient(to right, #003d7abf, #13b2ff);
-}
-
-.fondo-rojo {
-    background: #fbc02d;
-    background: -webkit-linear-gradient(to right, #ba000d, #f44330);
-    background: linear-gradient(to right, #ba000d, #f44330);
-}
-
-.fondo-default {
-    background: #304352;
-    background: -webkit-linear-gradient(to right, #d7d2cc, #304352);
-    background: linear-gradient(to right, #d7d2cc, #304352);
-}
-
 .center-vertical {
     margin: 0.2% -2% 0 2%;
 }
@@ -200,7 +176,7 @@ code {
     background: linear-gradient(to right, #0d703a, #79c15d);
 }
 
-.fondo-primer-warning {
+.fondo-primer-info {
     background: #fff019;
     background: -webkit-linear-gradient(to right, #1565c0, #1e88e5);
     background: linear-gradient(to right, #1565c0, #1e88e5);
@@ -210,6 +186,12 @@ code {
     background: #ba000d;
     background: -webkit-linear-gradient(to right, #ba000d, #f44330);
     background: linear-gradient(to right, #ba000d, #f44330);
+}
+
+.fondo-primer-warning {
+    background: #eef112;
+    background: -webkit-linear-gradient(to right, #fdd835, #ffff6b);
+    background: linear-gradient(to right, #fdd835, #ffff6b);
 }
 
 .progress-ranking{
@@ -223,3 +205,39 @@ code {
     min-width: 23% !important;
     text-align: center;
 }
+
+.scroll-gestores {
+    height: 45% !important;    
+    width: 100% !important;
+    display: flex;
+    direction: row;
+    overflow-x: auto;
+    /* box-sizing: border-box;
+    padding:0 1rem; */
+}
+
+.scroll-gestores::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+/* .scroll-gestores::-webkit-scrollbar:vertical {
+    width:10px;
+} */
+
+/* .scroll-gestores::-webkit-scrollbar-button:increment,.scroll-gestores::-webkit-scrollbar-button {
+    display: none;
+}  */
+
+/* .scroll-gestores::-webkit-scrollbar:horizontal {
+    height: 10px;
+}
+
+.scroll-gestores::-webkit-scrollbar-thumb {
+    background-color: #797979;
+    border-radius: 20px;
+    border: 2px solid #f1f2f3;
+}
+
+.scroll-gestores::-webkit-scrollbar-track {
+    border-radius: 10px;  
+} */

@@ -41,8 +41,8 @@ class Progress extends Component {
                     <div
                         style={{
                             width: width,
-                            height: `${progress - 20}%`,
-                            backgroundColor: this.handleColor(),
+                            height: `${progress}%`,
+                            backgroundColor: Function.colorPorcentaje(progress),
                             position: 'absolute',
                             bottom: '13%'
                         }}>
@@ -65,7 +65,7 @@ class Progress extends Component {
     handleAumentarPorcentaje() {
         const { progress } = this.state;
         const { indicador, total, invertir } = this.props;
-        var porcentaje = (indicador > 0 && total > 0) ? ((indicador * 100) / total) : 0;
+        var porcentaje = (total != 0) ? ((indicador * 100) / total) : 0;
         if (!invertir) {
             porcentaje = (100 - porcentaje);
         }
@@ -74,12 +74,6 @@ class Progress extends Component {
         if (_progress >= porcentaje) {
             clearInterval(this.state.time);
         }
-    }
-
-    handleColor() {
-        const { progress } = this.state;
-        var  color = (progress < 33) ? '#f44336' : (progress < 66 ? '#f9a825' : '#66bb6a');
-        return color;
     }
 }
 

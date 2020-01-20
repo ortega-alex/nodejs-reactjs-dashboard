@@ -19,10 +19,6 @@ class Ranking extends Component {
         }
     }
 
-    componentDidMount() {
-
-    }
-
     render() {
         const { indicador } = this.props;
         return (
@@ -38,17 +34,17 @@ class Ranking extends Component {
                 <div className="row">
                     <div className="col-md-4">
                         {indicador.gestores && indicador.gestores.length > 0 &&
-                            <Target 
-                                lugar={1} 
-                                tipo={'Global: ' + indicador.tipo} 
-                                usuario={indicador.gestores[0]} 
-                                descripcion="Primer lugar del Equipo" 
-                                changeView={this.props.changeView()}
+                            <Target
+                                lugar={1}
+                                tipo={'Global: ' + indicador.tipo}
+                                usuario={indicador.gestores[0]}
+                                descripcion="Primer lugar del Equipo"
+                                changeView={this.handleClose.bind(this)}
                             />
                         }
                     </div>
                     <div className="col-md-4 text-center">
-                        <div className="row" style={{height: '100%'}}>
+                        <div className="row" style={{ height: '90%', paddingTop: '10%' }}>
                             <div className="col-4">
                                 <div className="progress-ranking">
                                     <Progress
@@ -92,12 +88,12 @@ class Ranking extends Component {
                     </div>
                     <div className="col-md-4">
                         {indicador.gestores && indicador.gestores.length > 1 &&
-                            <Target 
-                                lugar={2} 
-                                tipo={'Gloabal: ' + indicador.tipo} 
-                                usuario={indicador.gestores[1]} 
-                                descripcion="Segundo lugar del equipo" 
-                                changeView={this.props.changeView()}
+                            <Target
+                                lugar={2}
+                                tipo={'Gloabal: ' + indicador.tipo}
+                                usuario={indicador.gestores[1]}
+                                descripcion="Segundo lugar del equipo"
+                                changeView={this.handleClose.bind(this)}
                             />
                         }
                     </div>
@@ -106,18 +102,22 @@ class Ranking extends Component {
                 <div className="row">
                     <div className="col-md-4 offset-md-4 text-center">
                         {indicador.gestores && indicador.gestores.length > 0 &&
-                            <Target 
-                                lugar={3} 
-                                tipo={'Global: ' + indicador.tipo} 
-                                usuario={indicador.gestores[indicador.gestores.length - 1]} 
+                            <Target
+                                lugar={3}
+                                tipo={'Global: ' + indicador.tipo}
+                                usuario={indicador.gestores[indicador.gestores.length - 1]}
                                 descripcion="Ultimo Lugar del equipo"
-                                changeView={this.props.changeView()}
+                                changeView={this.handleClose.bind(this)}
                             />
                         }
                     </div>
                 </div>
             </div>
         )
+    }
+
+    handleClose(evt) {
+        this.props.changeView(evt);
     }
 }
 

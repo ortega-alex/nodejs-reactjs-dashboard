@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Icon } from 'antd';
+import { Icon, Tooltip } from 'antd';
 
 import IndicadorActions from '../../_actions/indicador.actions';
 import Function from '../../_helpers/Function';
@@ -26,7 +26,7 @@ class Supervisor extends Component {
                     {supervisores && supervisores.map((res, i) => {
                         return (
                             <div className="col-md-3 m-0 p-0" key={i}>
-                                <div className={`target ${Function.getFondo(res.id_cartera_depto)}`}>
+                                <div className={`target ${Function.getFondo(res.meta <= 33 ? 3 : (res.meta <= 66 ? 2 : 1))}`}>
                                     <img
                                         height={((_height / 2) + 60)}
                                         width={((_height / 2)) + 60}
@@ -40,10 +40,26 @@ class Supervisor extends Component {
                                     <p className="m-0 p-0 w-100">{res.departamento}</p>
                                     <div className="row text-center m-4">
                                         <div className="col-6">
-                                            Indicador
+                                            <div className="row">
+                                                <div className="col-12">
+                                                    <b>Generación</b>
+                                                </div>
+                                                <div className="col-12">
+                                                    Q {Function.commaSeparateNumber(res.generacion)}
+                                                </div>
+                                            </div>
                                         </div>
                                         <div className="col-6">
-                                            Indicador
+                                            <div className="row">
+                                                <div className="col-12">
+                                                    <b>Recuperación</b>
+                                                </div>
+                                                <div className="col-12">
+                                                    <Tooltip title={'Porcentage de meta: ' + parseInt(res.meta) + '%'}>
+                                                        Q {Function.commaSeparateNumber(res.recuperacion)}
+                                                    </Tooltip>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

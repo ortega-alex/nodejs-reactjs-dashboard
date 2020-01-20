@@ -13,18 +13,20 @@ class Target extends Component {
         const { lugar, tipo, usuario, descripcion } = this.props;
         return (
             <div className={`target ${Function.getFondo(lugar)}`} >
-                <img
-                    height="150"
-                    width="150"
-                    src={Function.getImage(usuario.nombre_completo)}
-                    className="avatar"
-                    alt="Sin Imagen"
-                    onClick={() => { this.props.changeView(1); }}
-                />
+                <div style={{height: 150, width: '100%'}}>
+                    <img
+                        height="150"
+                        width="150"
+                        src={Function.getImage(usuario.nombre_completo)}
+                        className="avatar"
+                        alt="Sin Imagen"
+                        onClick={() => { this.props.changeView(1); }}
+                    />
+                </div>
                 <Icon
                     type="zoom-out"
                     className="icon-target"
-                    onClick={() => { this.props.handleClose(); }}
+                    onClick={() => { this.props.changeView(1); }}
                 />
                 <p className="h6 m-0 p-0 w-100">{usuario.nombre_completo}</p>
                 <p className="m-0 p-0 w-100">{descripcion}</p>

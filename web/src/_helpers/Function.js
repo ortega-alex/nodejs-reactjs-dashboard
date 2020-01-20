@@ -17,13 +17,9 @@ function getImage(name) {
 function getFondo(id_dep) {
     const arr = {
         1: 'fondo-primer-success',
-        2: 'fondo-primer-warning',
-        3: 'fondo-primer-danger',
-        4: 'fondo-promerica',
-        12: 'fondo-bi',
-        13: 'fondo-rojo',
-        18: 'fondo-promerica',
-        33: 'fondo-rojo',
+        2: 'fondo-primer-info',
+        3: 'fondo-primer-danger', 
+        4: 'fondo-primer-warning'     
     };
     return (arr[id_dep]) ? arr[id_dep] : 'fondo-default';
 }
@@ -46,13 +42,18 @@ function commaSeparateNumber(val) {
     return val;
 }
 
+function colorPorcentaje(meta){
+    return meta <= 33 ? '#f44336' : (meta <= 66 ? '#f9a825' : '#66bb6a');
+}
+
 const Function = {
     message,
     remplazarEspacios_,
     getImage,
     getFondo,
     ordenarArrDesc,
-    commaSeparateNumber
+    commaSeparateNumber,
+    colorPorcentaje
 }
 
 export default Function;

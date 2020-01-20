@@ -4,8 +4,17 @@ import { ordenarArrDesc, ordenarArrAcs } from '../config/helper';
 
 export async function getSupervisores(req, res) {
     try {
+        strQuery = `SELECT id_usuario_supervisor AS id_supervisor, 
+                    SUM(generacion_hoy) as generacion, 
+                    SUM(recuperacion_acumulada) AS recuperacion, 
+                    SUM(proyeccion) AS proyeccion
+                    FROM proyector..proyector_diario_top10_supervisores 
+                    GROUP BY  id_usuario_supervisor`;
+        var result = await db_mssql.pool.request().query(strQuery);
+        var indicadores = result.recordset;
+
         // WHERE a.id_puesto in(27, 33) 
-        var strQuery = `SELECT a.primer_nombre, a.primer_apellido, a.nombre_completo, a.id_usuario_sac AS id_usuario, a.id_usuario_sac AS id_supervisor, 
+        var strQuery = `SELECT a.primer_nombre, a.primer_apellido, a.nombre_completo, a.id_usuario_sac AS id_supervisor, 
                                 b.id_cartera_depto, b.descripcion AS departamento
                         FROM reclutador.usuarios a
                         INNER JOIN reclutador.catCarteraDepto b ON a.id_cartera_depto = b.id_cartera_depto
@@ -13,13 +22,32 @@ export async function getSupervisores(req, res) {
                         AND a.id_estatus_usuario = 7
                         AND a.id_usuario_sac NOT IN(206,625, 1456) 
                         ORDER BY departamento, primer_nombre`;
-
         await db_mysql.pool_100.query(strQuery, (err, supervisores) => {
-            if (err) return res.status(500).json({ message: err });
+            if (err) return res.status(500).json({ message: err });    
+            
+            var _supervisores = [];           
+            supervisores.forEach(element => {
+                indicadores.forEach(indicador => {
+                    if ( element.id_supervisor == indicador.id_supervisor ) {
+                        _supervisores.push({
+                            id_supervisor: element.id_supervisor,
+                            id_cartera_depto: element.id_cartera_depto,
+                            primer_nombre: element.primer_nombre,
+                            primer_apellido: element.primer_apellido,
+                            nombre_completo: element.nombre_completo,
+                            departamento: element.departamento,
+                            generacion: indicador.generacion,
+                            recuperacion: indicador.recuperacion,
+                            meta: (indicador.recuperacion * 100) / indicador.proyeccion
+                        })
+                    }
+                })
+            });
+
             return res.status(200).json({
                 err: false,
                 msj: 'success',
-                supervisores
+                supervisores: _supervisores
             });
         });
     } catch (err) {
@@ -48,6 +76,7 @@ export async function getGestoresPorSuper(req, res) {
                                     WHEN a.generacion_hoy IS NULL THEN 0
                                     ELSE a.generacion_hoy
                                 END AS generacion, 
+                                a.generacion_proyectada,
                                 CASE 
                                     WHEN a.controles IS NULL THEN 0
                                     ELSE a.controles
@@ -56,6 +85,7 @@ export async function getGestoresPorSuper(req, res) {
                                     WHEN a.recuperacion_acumulada IS NULL THEN 0
                                     ELSE a.recuperacion_acumulada
                                 END AS recuperacion,
+                                a.proyeccion,
                                 convert(varchar(8),rank) AS posicion,
 		                        convert(varchar(4),conteo_grupo) as de,
                                 b.nombres, b.apellidos, b.nombre_completo
@@ -95,20 +125,22 @@ export async function getGestoresPorSuper(req, res) {
                 nombres: element.nombres, 
                 apellidos: element.apellidos,   
                 nombre_completo: element.nombre_completo,
-                indicador: element.generacion
+                indicador: parseFloat(parseFloat(element.generacion).toFixed(2)),
+                meta: (element.generacion * 100) / element.generacion_proyectada
             });
             indicadores[4].gestores.push({ 
                 id_usuario: element.id_usuario,
                 nombres: element.nombres, 
                 apellidos: element.apellidos,   
                 nombre_completo: element.nombre_completo,
-                indicador: element.recuperacion
+                indicador: parseFloat(parseFloat(element.recuperacion).toFixed(2)),
+                meta: (element.recuperacion * 100) / element.proyeccion
             });           
             indicadores[0].total = parseInt(element.de);
             indicadores[1].total = parseInt(element.de);
-            indicadores[2].total += element.controles;
-            indicadores[3].total += element.generacion;
-            indicadores[4].total += parseFloat(element.recuperacion);            
+            indicadores[2].total += parseInt(element.controles);
+            indicadores[3].total += parseFloat(parseFloat(element.generacion).toFixed(2));
+            indicadores[4].total += parseFloat(parseFloat(element.recuperacion).toFixed(2));            
         });
 
         ordenarArrAcs(indicadores[0].gestores, 'indicador');
