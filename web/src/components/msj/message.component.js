@@ -17,7 +17,8 @@ class Message extends Component {
         this.state = {
             frm_activo: true,
             todos: true,
-            title: 'Envia a todos los destinatarios!'
+            title: 'Envia a todos los destinatarios!',
+            tipo: 0
         };
     }
 
@@ -28,7 +29,7 @@ class Message extends Component {
     render() {
         const { supervisores } = this.props;
         const { getFieldDecorator } = this.props.form;
-        const { todos, title, frm_activo } = this.state;
+        const { todos, title, frm_activo, tipo } = this.state;
         return (
             <div className="container pt-3">
                 <div className="row">
@@ -41,6 +42,26 @@ class Message extends Component {
                 <div className="row">
                     <div className="col-md-8 offset-md-2 bordered">
                         <Form ref={ref => this.formulario = ref} onSubmit={this.handleEnviarMsj.bind(this)}>
+
+                        <Item label="Tipo de mensaje">
+                                {getFieldDecorator('tipo', {
+                                    rules: [{ required: true, message: 'Por favor seleccione una opcion!' }],
+                                    initialValue: tipo
+                                })(
+                                    <Select
+                                        placeholder="Seleccione el tipo de mensaje"
+                                        showSearch
+                                        autoClearSearchValue
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                        onChange={(value) => { this.setState({ tipo: value }) }}
+                                    >
+                                        <Option value={0}>Texto</Option>
+                                        <Option value={1}>Video</Option>
+                                    </Select>
+                                )}
+                            </Item>
+
                             <div className="row">
                                 <div className="col-10">
                                     <Item label="Destinatario">
@@ -76,44 +97,49 @@ class Message extends Component {
                                     />
                                 </div>
                             </div>
-                            <div className="row">
-                                <div className="col-md-10">
-                                    <Item label="Tiempo">
-                                        {getFieldDecorator('tiempo', {
-                                            rules: [{ required: true, message: 'Por favor seleccione una opcion!' }],
-                                            initialValue: 0
-                                        })(
-                                            <Select
-                                                placeholder="Seleccione una opcion"
-                                                showSearch
-                                                autoClearSearchValue
-                                                optionFilterProp="children"
-                                                filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                            >
-                                                <Option value={0}>Minutos</Option>
-                                                <Option value={1}>Segundos</Option>
-                                            </Select>
-                                        )}
-                                    </Item>
-                                </div>
-                                <div className="col-md-2">
-                                    <Item label="Duracion">
-                                        {getFieldDecorator('duracion', {
-                                            initialValue: (5),
-                                            rules: [{ required: true, message: 'Por favor indica un tiempo!' }]
-                                        })(
-                                            <InputNumber className="input" min={1} placeholder="Duracion" />
-                                        )}
-                                    </Item>
-                                </div>
-                            </div>
+                            {tipo == 0 &&
+                                <div className="row">
+                                    <div className="col-md-10">
+                                        <Item label="Tiempo">
+                                            {getFieldDecorator('tiempo', {
+                                                rules: [{ required: true, message: 'Por favor seleccione una opcion!' }],
+                                                initialValue: 0
+                                            })(
+                                                <Select
+                                                    placeholder="Seleccione una opcion"
+                                                    showSearch
+                                                    autoClearSearchValue
+                                                    optionFilterProp="children"
+                                                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                                >
+                                                    <Option value={0}>Minutos</Option>
+                                                    <Option value={1}>Segundos</Option>
+                                                </Select>
+                                            )}
+                                        </Item>
+                                    </div>
+                                    <div className="col-md-2">
+                                        <Item label="Duracion">
+                                            {getFieldDecorator('duracion', {
+                                                initialValue: (5),
+                                                rules: [{ required: true, message: 'Por favor indica un tiempo!' }]
+                                            })(
+                                                <InputNumber className="input" min={1} placeholder="Duracion" />
+                                            )}
+                                        </Item>
+                                    </div>
+                                </div>    
+                            }                        
+
                             <Item label="Mensaje">
                                 {getFieldDecorator('mensaje', {
                                     rules: [{ required: true, message: 'Por favor ingrese el mensaje!' }]
                                 })(
-                                    <TextArea rows={10} placeholder="Ingrese el mensaje" maxLength="600" />
+                                    tipo == 0 ? <TextArea rows={10} placeholder="Ingrese el mensaje" maxLength="600" />
+                                        : <Input type="text" placeholder="Ingrese una url valida" />
                                 )}
                             </Item>
+
                             <Button type="primary" htmlType="submit" block>
                                 Enviar
                             </Button>

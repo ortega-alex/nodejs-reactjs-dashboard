@@ -30,12 +30,12 @@ class Supervisor extends Component {
                                     <img
                                         height={((_height / 2) + 60)}
                                         width={((_height / 2)) + 60}
-                                        src={Function.getImage(res.nombre_completo)}
+                                        src={Function.getImage(res.foto)}
                                         className="avatar"
                                         alt="Sin Imagen"
-                                        onClick={() => this.props.changeView(0, res.id_supervisor)}
+                                        onClick={() => this.props.changeView(0, res)}
                                     />
-                                    <Icon type="zoom-in" className="icon-target" onClick={() => this.props.changeView(0, res.id_supervisor)} />
+                                    <Icon type="zoom-in" className="icon-target" onClick={() => this.props.changeView(0, res)} />
                                     <p className="h6 m-0 p-0 w-100">{res.primer_nombre + ' ' + res.primer_apellido}</p>
                                     <p className="m-0 p-0 w-100">{res.departamento}</p>
                                     <div className="row text-center m-4">

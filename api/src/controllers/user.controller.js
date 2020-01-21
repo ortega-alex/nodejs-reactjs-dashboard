@@ -28,14 +28,17 @@ export async function login(req, res) {
         if (user.estado == 1) return res.json({ err: true, msj: "Contraseña incorrecta" });
         if (user.estado == 2) return res.json({ err: true, msj: "El usuario esta suspendido" });
 
-        strQuery = `SELECT id_cartera_depto 
-                    FROM usuarios 
-                    WHERE id_usuario_sac = ${user.id_usuario}`;
+        strQuery = `SELECT a.id_cartera_depto,
+                            b.descripcion
+                    FROM reclutador.usuarios a
+                    INNER JOIN reclutador.catCarteraDepto b ON a.id_cartera_depto = b.id_cartera_depto
+                    WHERE a.id_usuario_sac = = ${user.id_usuario}`;
 
         await db_mysql.pool_100.query(strQuery, (err, _res) => {
             if (err) return res.status(500).json({ err: true, msj: "Ha ocurrido un erroal al momento de realizar la consulta" });
 
             user.id_cartera_depto = _res[0].id_cartera_depto;
+            user.departamento = _res[0].descripcion;
             res.status(200).json({
                 err: false,
                 msj: "Sesion iniciada correctamente",

@@ -3,12 +3,15 @@ import { connect } from 'react-redux';
 import { AsyncStorage } from 'AsyncStorage';
 import io from 'socket.io-client';
 import { Drawer } from 'antd';
+import YouTube from 'react-youtube';
 
 import Supervisor from './supervisor.component';
 import Gestor from './gestor.component';
 import _server from '../../_services/server.services';
 
 const socket = io(_server._url + _server._port);
+const _width = window.innerWidth;
+const _height = window.innerHeight;
 
 class Indicador extends Component {
     constructor(props) {
@@ -16,7 +19,7 @@ class Indicador extends Component {
         this.state = {
             user: undefined,
             vista: undefined,
-            id_supervisor: undefined,
+            supervisor: undefined,
             _message: null,
             visible: false,
         };
@@ -37,20 +40,26 @@ class Indicador extends Component {
                 });
             }
         });
-
-
     }
 
     render() {
-        const { user, vista, id_supervisor, _message, visible } = this.state;
+        const { vista, supervisor, _message, visible } = this.state;
+        const opts = {
+            height: (_height) ? (_height - (_height / 3)) : 500, //window.innerHeight - (window.innerHeight / 3),
+            width: (_width) ? (_width - 50) : 1200, //window.innerWidth - 50,
+            playerVars: {
+                autoplay: 1,
+                controls: 0
+            }
+        };
         return (
             <div>
-                {(user && vista == 1) &&
-                    <Supervisor user={user} changeView={this.handleChangeView.bind(this)} />
+                {(vista == 1) &&
+                    <Supervisor changeView={this.handleChangeView.bind(this)} />
                 }
 
-                {(user && vista == 0) &&
-                    <Gestor id_supervisor={id_supervisor} changeView={this.handleChangeView.bind(this)} />
+                {(supervisor && vista == 0) &&
+                    <Gestor supervisor={supervisor} changeView={this.handleChangeView.bind(this)} />
                 }
 
                 <Drawer
@@ -67,6 +76,23 @@ class Indicador extends Component {
                             </div>
                         </div>
                     </div>
+
+                    {/* <YouTube
+                        videoId="Zx2Nn2T_ATU"
+                        opts={opts}
+                        onReady={(event) => {
+                            event.target.setVolume(100);
+                            event.target.playVideo();
+                        }}
+                        onPlaybackQualityChange={(event) => { console.log('onPlaybackQualityChange', event) }}
+                        onStateChange={(event) => {
+                            var duracion = event.target.getDuration();
+                            setTimeout(() => {
+                                this.setState({ visible: false });
+                            }, duracion * 1000);
+                        }}
+                        onError={(event) => { console.log('onError', event) }}
+                    /> */}
                 </Drawer>
             </div>
         );
@@ -74,11 +100,11 @@ class Indicador extends Component {
 
     handleGetIndicadores() {
         const { user } = this.state;
-        this.setState({ vista: user.cargo, id_supervisor: user.id_usuario });
+        this.setState({ vista: user.cargo, supervisor: user });
     }
 
-    handleChangeView(vista, id_supervisor = undefined) {
-        this.setState({ vista, id_supervisor });
+    handleChangeView(vista, supervisor = undefined) {
+        this.setState({ vista, supervisor });
     }
 
     handleDrawer(res) {

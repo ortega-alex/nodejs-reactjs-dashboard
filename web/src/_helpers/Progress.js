@@ -44,14 +44,14 @@ class Progress extends Component {
                             height: `${progress}%`,
                             backgroundColor: Function.colorPorcentaje(progress),
                             position: 'absolute',
-                            bottom: '13%'
+                            bottom: '30%'
                         }}>
                     </div>
                     <p
-                        className="m-0 p-0"
+                        className="m-0 p-0 h3"
                         style={{
                             position: 'absolute',
-                            bottom: 0,
+                            bottom: -2,
                             width: '100%',
                             textAlign: 'center'
                         }}
@@ -69,7 +69,7 @@ class Progress extends Component {
         if (!invertir) {
             porcentaje = (100 - porcentaje);
         }
-        var _progress = (progress + 1);
+        var _progress = (progress + 5);
         this.setState({ progress: _progress });
         if (_progress >= porcentaje) {
             clearInterval(this.state.time);

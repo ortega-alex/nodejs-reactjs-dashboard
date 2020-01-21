@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Icon, Progress as ProgressAntd } from 'antd';
+import { Progress as ProgressAntd } from 'antd';
 
 import IndicadorActions from '../../_actions/indicador.actions';
 import Function from '../../_helpers/Function';
@@ -8,8 +8,11 @@ import Progress from '../../_helpers/Progress';
 import Ranking from './ranking.component';
 import Target from '../../_helpers/Target';
 
+const logoOca = require('../../media/logo_oca.png');
+
 const _height = window.innerHeight;
 const _width = window.innerWidth;
+const _intervalor = 30000;
 
 class Gestor extends Component {
     constructor(props) {
@@ -23,9 +26,9 @@ class Gestor extends Component {
     }
 
     componentDidMount() {
-        this.props.dispatch(IndicadorActions.getGestoresSupervisor(this.props.id_supervisor));
+        this.handleGetIndicador();
         this.setState({ interval_consulta: setInterval(() => { this.handleGetIndicador() }, 1800000) });
-        this.setState({ interval_transicion: setInterval(() => { this.handleView() }, 10000) });
+        this.setState({ interval_transicion: setInterval(() => { this.handleView() }, _intervalor) });
     }
 
     componentWillUnmount() {
@@ -34,27 +37,49 @@ class Gestor extends Component {
 
     render() {
         const { _ind } = this.state;
-        const { indicadores } = this.props;
+        const { indicadores, supervisor } = this.props;
         return (
             <div style={{ width: _width, height: _height, position: 'relative' }}>
                 {(indicadores && indicadores.length > 0) &&
                     <div>
                         {_ind == 0 ?
-                            <Ranking indicador={indicadores[0]} changeView={this.handleClose.bind(this)} />
+                            <Ranking
+                                indicador={indicadores[0]}
+                                recuperacion={indicadores[4]}
+                                supervisor={supervisor}
+                                changeView={this.handleClose.bind(this)}
+                            />
                             : this.handleGetVertical()
                         }
                     </div>
                 }
+                <div className="logo-oca">
+                    <img height="70" src={logoOca} />
+                </div>
+                <div className="logo-departamento">
+                    <img height="70" src={Function.getLogoDepartamento(supervisor.id_cartera_depto)} alt="Sin Logo"/>
+                </div>
             </div>
         );
     }
 
+    handleGetIndicador() {
+        const { supervisor } = this.props;
+        this.props.dispatch(IndicadorActions.getGestoresSupervisor(supervisor.id_usuario));
+    }
+
     handleGetVertical() {
         const { _ind } = this.state;
-        const { indicadores } = this.props;
+        const { indicadores, supervisor } = this.props;
         return (
             <div>
                 <div style={{ width: _width, height: _height }}>
+                    <div className="row text-center">
+                        <div className="col-md-4 offset-md-4">
+                            <h3 className="m-0 p-0">{indicadores[_ind].titulo} {supervisor.departamento}</h3>
+                            <p className="p-0 m-0 h4">Total: {indicadores[_ind].tipo} {Function.commaSeparateNumber(indicadores[_ind].total)}</p>
+                        </div>
+                    </div>
                     <div
                         className="scroll-gestores"
                         onClick={() => {
@@ -76,7 +101,7 @@ class Gestor extends Component {
                                                     <img
                                                         height="100"
                                                         width="100"
-                                                        src={Function.getImage(res.nombre_completo)}
+                                                        src={Function.getImage(res.foto)}
                                                         className="avatar"
                                                         alt="Sin Imagen"
                                                     />
@@ -88,13 +113,13 @@ class Gestor extends Component {
                                             <img
                                                 height="100"
                                                 width="100"
-                                                src={Function.getImage(res.nombre_completo)}
+                                                src={Function.getImage(res.foto)}
                                                 className="avatar"
                                                 alt="Sin Imagen"
                                             />
                                         }
                                     </div>
-                                    <p className="m-0 p-0">
+                                    <p className="m-0 p-0 h6">
                                         <b> #{i + 1} {res.nombres.split(' ')[0]} {res.apellidos.split(' ')[0]}</b>
                                     </p>
                                     {res.meta &&
@@ -107,7 +132,7 @@ class Gestor extends Component {
                                             position:
                                                 'absolute',
                                             bottom: 0,
-                                            height: '40%',
+                                            height: '35%',
                                             width: '100%',
                                         }}
                                     >
@@ -126,15 +151,7 @@ class Gestor extends Component {
                         })}
                         <div style={{ minWidth: '8%' }}></div>
                     </div>
-                    <div style={{ height: '55%' }}>
-                        <div className="row text-center">
-                            <div className="col-md-4 offset-md-4">
-                                <h4 className="m-0 p-0">{indicadores[_ind].titulo}</h4>
-                                <p className="p-0 m-0">{indicadores[_ind].descr}</p>
-                                <p className="p-0 m-0 h6">{indicadores[_ind].tipo} {Function.commaSeparateNumber(indicadores[_ind].total)}</p>
-                            </div>
-                        </div>
-
+                    <div style={{ height: '38%' }}>
                         {indicadores[_ind].gestores.length > 0 &&
                             <div className="row">
                                 <div className="col-3 offset-md-3">
@@ -142,7 +159,7 @@ class Gestor extends Component {
                                         lugar={1}
                                         tipo={indicadores[_ind].tipo}
                                         usuario={indicadores[_ind].gestores[0]}
-                                        descripcion="Primer lugar del Equipo"
+                                        descripcion="Primer lugar del equipo."
                                         changeView={this.handleClose.bind(this)}
                                     />
                                 </div>
@@ -151,7 +168,7 @@ class Gestor extends Component {
                                         lugar={3}
                                         tipo={indicadores[_ind].tipo}
                                         usuario={indicadores[_ind].gestores[indicadores[_ind].gestores.length - 1]}
-                                        descripcion="Ultimo lugar del Equipo"
+                                        descripcion="Ultimo lugar del equipo."
                                         changeView={this.handleClose.bind(this)}
                                     />
                                 </div>
@@ -174,14 +191,14 @@ class Gestor extends Component {
 
         setTimeout(() => {
             if (this.DivGestores) {
-                this.DivGestores.scrollLeft = _width - 155;
+                this.DivGestores.scrollLeft = _width - 100;
             }
-        }, 3333);
+        }, (_intervalor / 3));
         setTimeout(() => {
             if (this.DivGestores) {
                 this.DivGestores.scrollLeft = this.DivGestores.scrollHeight * 10;
             }
-        }, 6666);
+        }, ((_intervalor / 3) * 2));
 
         this.setState({ _ind: _indicador });
     }

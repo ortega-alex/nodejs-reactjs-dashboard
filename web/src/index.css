@@ -169,7 +169,6 @@ code {
     pointer-events: none;
 }
 
-
 .fondo-primer-success {
     background: #56ab2f;
     background: -webkit-linear-gradient(to right, #0d703a, #79c15d);
@@ -194,12 +193,12 @@ code {
     background: linear-gradient(to right, #fdd835, #ffff6b);
 }
 
-.progress-ranking{
+.progress-ranking {
     height: 100%;
     font-size: 1.3rem;
 }
 
-.indicadores-gestores{
+.indicadores-gestores {
     position: relative;
     height: 100%;
     min-width: 23% !important;
@@ -207,37 +206,25 @@ code {
 }
 
 .scroll-gestores {
-    height: 45% !important;    
+    height: 45% !important;
     width: 100% !important;
     display: flex;
     direction: row;
     overflow-x: auto;
-    /* box-sizing: border-box;
-    padding:0 1rem; */
 }
 
 .scroll-gestores::-webkit-scrollbar {
     -webkit-appearance: none;
 }
 
-/* .scroll-gestores::-webkit-scrollbar:vertical {
-    width:10px;
-} */
-
-/* .scroll-gestores::-webkit-scrollbar-button:increment,.scroll-gestores::-webkit-scrollbar-button {
-    display: none;
-}  */
-
-/* .scroll-gestores::-webkit-scrollbar:horizontal {
-    height: 10px;
+.logo-departamento {
+    position: absolute;
+    bottom: 10px;
+    right: 100px;
 }
 
-.scroll-gestores::-webkit-scrollbar-thumb {
-    background-color: #797979;
-    border-radius: 20px;
-    border: 2px solid #f1f2f3;
+.logo-oca {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
 }
-
-.scroll-gestores::-webkit-scrollbar-track {
-    border-radius: 10px;  
-} */

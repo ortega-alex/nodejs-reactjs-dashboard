@@ -1,5 +1,11 @@
 import { message as Message } from 'antd';
 const _URL_IMG = "http://apps.ocacall.oca/reclutador/arch/";
+const arr_logos = { 
+    4 : require('../media/promerica.jpg'),
+    12 : require('../media/bi.png'),
+    13 : require('../media/bac.png'),
+    33 : require('../media/gyt.png')
+};
 
 function message(typo, menssage) {
     Message[typo](menssage);
@@ -10,8 +16,8 @@ function remplazarEspacios_(val) {
 }
 
 function getImage(name) {
-    var path = remplazarEspacios_(name.trim());
-    return _URL_IMG + path + ".jpg";
+    // var path = remplazarEspacios_(name.trim());
+    return _URL_IMG + name;//+ ".jpg";
 }
 
 function getFondo(id_dep) {
@@ -43,7 +49,12 @@ function commaSeparateNumber(val) {
 }
 
 function colorPorcentaje(meta){
-    return meta <= 33 ? '#f44336' : (meta <= 66 ? '#f9a825' : '#66bb6a');
+    // return meta <= 33 ? '#f44336' : (meta <= 66 ? '#f9a825' : '#66bb6a');
+    return meta <= 20 ? '#BF4346' : (meta <= 40 ? '#E9662C' : ( meta <= 60 ? '#FFED6A' : (meta <= 95 ? '#52A72E' : '#4A95DF')));
+}
+
+function getLogoDepartamento(id_departamento) {       
+    return arr_logos[id_departamento] ? arr_logos[id_departamento] : '';
 }
 
 const Function = {
@@ -53,7 +64,8 @@ const Function = {
     getFondo,
     ordenarArrDesc,
     commaSeparateNumber,
-    colorPorcentaje
+    colorPorcentaje,
+    getLogoDepartamento
 }
 
 export default Function;

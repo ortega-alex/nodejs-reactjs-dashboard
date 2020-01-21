@@ -29,3 +29,8 @@ export function ordenarArrAcs(arr, name) {
         return 0;
     });
 }
+
+export function cleanUrlYouTube(url){
+    var arr = url.split('=');
+    console(arr);
+}
