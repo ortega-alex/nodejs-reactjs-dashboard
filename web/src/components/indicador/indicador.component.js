@@ -4,6 +4,7 @@ import { AsyncStorage } from 'AsyncStorage';
 import io from 'socket.io-client';
 import { Drawer } from 'antd';
 import YouTube from 'react-youtube';
+import { Player } from 'video-react';
 
 import Supervisor from './supervisor.component';
 import Gestor from './gestor.component';
@@ -22,6 +23,8 @@ class Indicador extends Component {
             supervisor: undefined,
             _message: null,
             visible: false,
+            tipo_mensaje: undefined,
+            _timer: undefined
         };
     }
 
@@ -43,10 +46,10 @@ class Indicador extends Component {
     }
 
     render() {
-        const { vista, supervisor, _message, visible } = this.state;
+        const { vista, supervisor, _message, visible, tipo_mensaje } = this.state;
         const opts = {
-            height: (_height) ? (_height - (_height / 3)) : 500, //window.innerHeight - (window.innerHeight / 3),
-            width: (_width) ? (_width - 50) : 1200, //window.innerWidth - 50,
+            height: (_height) ? (_height - (_height / 3)) : 500,
+            width: (_width) ? (_width - 50) : 1200,
             playerVars: {
                 autoplay: 1,
                 controls: 0
@@ -65,34 +68,53 @@ class Indicador extends Component {
                 <Drawer
                     placement="bottom"
                     closable={false}
-                    onClose={() => { this.setState({ visible: false }); }}
+                    onClose={this.handleDrawerClose.bind(this)}
                     visible={visible}
                     height='80%'
                 >
-                    <div className="drawer-style">
-                        <div id="titles">
-                            <div id="titlecontent">
-                                <p className="center">{_message}</p>
+                    {tipo_mensaje == 1 &&
+                        <div className="drawer-style">
+                            <div id="titles">
+                                <div id={_message.length < 300 ? 'titlecontent-menor' : 'titlecontent'}>
+                                    <p className="center">{_message}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
 
-                    {/* <YouTube
-                        videoId="Zx2Nn2T_ATU"
-                        opts={opts}
-                        onReady={(event) => {
-                            event.target.setVolume(100);
-                            event.target.playVideo();
-                        }}
-                        onPlaybackQualityChange={(event) => { console.log('onPlaybackQualityChange', event) }}
-                        onStateChange={(event) => {
-                            var duracion = event.target.getDuration();
-                            setTimeout(() => {
-                                this.setState({ visible: false });
-                            }, duracion * 1000);
-                        }}
-                        onError={(event) => { console.log('onError', event) }}
-                    /> */}
+                    {tipo_mensaje == 2 &&
+                        <YouTube
+                            videoId={_message}
+                            opts={opts}
+                            onReady={(event) => {
+                                event.target.setVolume(100);
+                                event.target.playVideo();
+                            }}
+                            onPlaybackQualityChange={(event) => { console.log('onPlaybackQualityChange', event) }}
+                            onStateChange={(event) => {
+                                var duracion = event.target.getDuration();
+                                this.setState({
+                                    _timer: setTimeout(() => {
+                                        this.handleDrawerClose();
+                                    }, duracion * 1000)
+                                });
+                            }}
+                            onError={(event) => { console.log('onError', event) }}
+                        />
+                    }
+
+                    {tipo_mensaje == 3 &&
+                        <div style={{ margin: '0px 20%' }}>
+                            <Player
+                                autoPlay
+                            >
+                                <source id="myVideo" src={_message} />
+                            </Player>
+                            <video id="mytest" controls style={{ display: 'none' }}>
+                                <source src={_message} />
+                            </video>
+                        </div>
+                    }
                 </Drawer>
             </div>
         );
@@ -108,12 +130,44 @@ class Indicador extends Component {
     }
 
     handleDrawer(res) {
-        var tiempo = (res.tiempo == 0) ? res.duracion * 60000 : res.duracion * 1000;
-        this.setState({ _message: res.mensaje, visible: true }, () => {
-            setTimeout(() => {
-                this.setState({ visible: false });
-            }, tiempo);
-        });
+        this.handleDrawerClose();
+        const { tipo, duracion, mensaje, tiempo } = res;
+        if (tipo == 0) {
+            var _tiempo = (tiempo == 0) ? duracion * 60000 : duracion * 1000;
+            this.setState({ _message: mensaje, visible: true, tipo_mensaje: 1 }, () => {
+                this.setState({
+                    _timer: setTimeout(() => {
+                        this.handleDrawerClose();
+                    }, _tiempo)
+                });
+            });
+        }
+
+        if (tipo == 1) {
+            var mp3 = res.mensaje.indexOf('mp3');
+            var mp4 = res.mensaje.indexOf('mp4');
+            if (mp3 !== -1 || mp4 !== -1) {
+                var url = _server._url + _server._port + '/videos/' + mensaje;
+                this.setState({ _message: url, visible: true, tipo_mensaje: 3 }, () => {
+                    setTimeout(() => {
+                        var vid = document.getElementById("mytest");
+                        this.setState({
+                            _timer: setTimeout(() => {
+                                this.handleDrawerClose();
+                            }, vid.duration * 1000)
+                        });
+                    }, 2000);
+                });
+            } else {
+                var arr = mensaje.split('=');
+                this.setState({ _message: arr[1], visible: true, tipo_mensaje: 2 });
+            }
+        }
+    }
+
+    handleDrawerClose() {
+        clearTimeout(this.state._timer);
+        this.setState({ visible: false, tipo_mensaje: undefined, mensaje: undefined });
     }
 }
 

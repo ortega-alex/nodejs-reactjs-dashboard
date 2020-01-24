@@ -1,9 +1,10 @@
 import { message as Message } from 'antd';
 const _URL_IMG = "http://apps.ocacall.oca/reclutador/arch/";
 const arr_logos = { 
-    4 : require('../media/promerica.jpg'),
+    4 : require('../media/promerica.png'),
     12 : require('../media/bi.png'),
     13 : require('../media/bac.png'),
+    18 : require('../media/promerica.png'),
     33 : require('../media/gyt.png')
 };
 

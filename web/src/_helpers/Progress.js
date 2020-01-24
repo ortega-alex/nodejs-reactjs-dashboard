@@ -25,17 +25,24 @@ class Progress extends Component {
         const { progress } = this.state;
         return (
             direccion == 0 ?
-                <div style={{ height: '100%', width: '100%' }}>
+                <div style={{ height: '100%', width: '80%', margin: '10%' }}>
                     <div
                         style={{
                             height: height,
-                            width: `${progress}%`,
-                            backgroundColor: this.handleColor()
-                        }}>
+                            width: '100%',
+                            backgroundColor: 'white',
+                        }}
+                    >
+                        <div
+                            style={{
+                                height: '100%',
+                                width: `${progress}%`,
+                                backgroundColor: Function.colorPorcentaje(progress),
+                            }}>
+                        </div>
                     </div>
-                    <p className="m-0 p-0" style={{ fontSize: '1vh' }}><b>{tipo} {Function.commaSeparateNumber(indicador)}</b></p>
+                    <p className="m-0 p-0 h1"><b>{tipo} {Function.commaSeparateNumber(indicador)}</b></p>
                 </div>
-
                 :
                 <div style={{ height: '100%', width: '100%', position: 'relative', display: 'flex', justifyContent: 'center' }}>
                     <div
@@ -48,7 +55,7 @@ class Progress extends Component {
                         }}>
                     </div>
                     <p
-                        className="m-0 p-0 h3"
+                        className="m-0 p-0 h1"
                         style={{
                             position: 'absolute',
                             bottom: -2,
@@ -71,7 +78,7 @@ class Progress extends Component {
         }
         var _progress = (progress + 5);
         this.setState({ progress: _progress });
-        if (_progress >= porcentaje) {
+        if (_progress >= porcentaje || _progress == 100) {
             clearInterval(this.state.time);
         }
     }

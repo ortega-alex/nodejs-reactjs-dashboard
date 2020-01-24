@@ -63,7 +63,7 @@ code {
 .icon-target {
     position: absolute;
     font-size: 2em;
-    top: 30%;
+    top: 25%;
     left: 45%;
     padding-top: 30%;
     opacity: 0;
@@ -152,7 +152,26 @@ code {
         top: 100%;
     }
     100% {
-        top: -200%;
+        top: -400%;
+    }
+}
+
+/* menor de 300 */
+#titlecontent-menor {
+    position: absolute;
+    top: 100%;
+}
+
+#titlecontent-menor {
+    animation: scrollm 25s linear 1s infinite;
+}
+
+@keyframes scrollm {
+    0% {
+        top: 100%;
+    }
+    100% {
+        top: 0%;
     }
 }
 
@@ -195,18 +214,17 @@ code {
 
 .progress-ranking {
     height: 100%;
-    font-size: 1.3rem;
 }
 
 .indicadores-gestores {
     position: relative;
     height: 100%;
-    min-width: 23% !important;
+    min-width: 31% !important;
     text-align: center;
 }
 
 .scroll-gestores {
-    height: 45% !important;
+    height: 70% !important;
     width: 100% !important;
     display: flex;
     direction: row;

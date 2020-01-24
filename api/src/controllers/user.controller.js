@@ -32,7 +32,7 @@ export async function login(req, res) {
                             b.descripcion
                     FROM reclutador.usuarios a
                     INNER JOIN reclutador.catCarteraDepto b ON a.id_cartera_depto = b.id_cartera_depto
-                    WHERE a.id_usuario_sac = = ${user.id_usuario}`;
+                    WHERE a.id_usuario_sac = ${user.id_usuario}`;
 
         await db_mysql.pool_100.query(strQuery, (err, _res) => {
             if (err) return res.status(500).json({ err: true, msj: "Ha ocurrido un erroal al momento de realizar la consulta" });

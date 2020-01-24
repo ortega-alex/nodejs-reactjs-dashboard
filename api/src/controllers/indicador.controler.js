@@ -72,12 +72,10 @@ export async function getGestoresPorSuper(req, res) {
         const { id_supervisor } = req.params;
         if (!id_supervisor) return res.json({ err: true, msj: 'Falta informacion!' });
 
-        var indicadores = [
-            { tipo: '#', titulo: 'Ranking', total: 0, gestores: [] },
-            { tipo: '#', titulo: 'Ranking', total: 0, gestores: [] },
-            { tipo: '#', titulo: 'Controles', total: 0, gestores: [] },
-            { tipo: 'Q', titulo: 'Generación', total: 0, gestores: [] },
-            { tipo: 'Q', titulo: 'Recuperación acumulada', total: 0, gestores: [] }
+        var indicadores = [            
+            { tipo: 'Q', titulo: 'Recuperación acumulada', total: 0, gestores: [] },
+            { tipo: 'Q', titulo: 'Generación de promesas del día', total: 0, gestores: [] },            
+            { tipo: 'Controles:', titulo: 'Controles del día', total: 0, gestores: [] }
         ];
 
         var strQuery = `SELECT a.id_usuario, 
@@ -85,16 +83,14 @@ export async function getGestoresPorSuper(req, res) {
                                     WHEN a.generacion_diaria IS NULL THEN 0
                                     ELSE a.generacion_diaria
                                 END AS generacion, 
-                                CASE 
-                                    WHEN a.controles IS NULL THEN 0
-                                    ELSE a.controles
-                                END AS controles, 
+                                (SELECT SUM(total_controles)
+                                FROM proyector..proyector_diario_controles_x_hora
+                                WHERE id_usuario = a.id_usuario
+                                GROUP BY id_usuario) AS controles,
                                 CASE 
                                     WHEN a.recuperacion_acumulada IS NULL THEN 0
                                     ELSE a.recuperacion_acumulada
                                 END AS recuperacion,
-                                convert(varchar(8),rank) AS posicion,
-                                convert(varchar(4),conteo_grupo) as de,
                                 b.nombres, b.apellidos, b.nombre_completo,
                                 c.dir_foto AS foto,
                                 (	SELECT top 1 Meta_Mensual 
@@ -117,54 +113,34 @@ export async function getGestoresPorSuper(req, res) {
                 nombres: element.nombres,
                 apellidos: element.apellidos,
                 nombre_completo: element.nombre_completo,
-                indicador: parseInt(element.posicion),
+                indicador: Math.round(parseFloat(element.recuperacion)),
+                meta: element.meta > 0 ? (element.recuperacion * 100) / element.meta : 0,
                 foto: element.foto
-            });
+            });           
             indicadores[1].gestores.push({
-                id_usuario: element.id_usuario,
-                nombres: element.nombres,
-                apellidos: element.apellidos,
-                nombre_completo: element.nombre_completo,
-                indicador: parseInt(element.posicion),
-                foto: element.foto
-            });
-            indicadores[2].gestores.push({
-                id_usuario: element.id_usuario,
-                nombres: element.nombres,
-                apellidos: element.apellidos,
-                nombre_completo: element.nombre_completo,
-                indicador: element.controles,
-                foto: element.foto
-            });
-            indicadores[3].gestores.push({
                 id_usuario: element.id_usuario,
                 nombres: element.nombres,
                 apellidos: element.apellidos,
                 nombre_completo: element.nombre_completo,
                 indicador: Math.round(parseFloat(element.generacion)),
                 foto: element.foto
-            });
-            indicadores[4].gestores.push({
+            });          
+            indicadores[2].gestores.push({
                 id_usuario: element.id_usuario,
                 nombres: element.nombres,
                 apellidos: element.apellidos,
                 nombre_completo: element.nombre_completo,
-                indicador: Math.round(parseFloat(element.recuperacion)),
-                meta: element.meta > 0 ? (element.recuperacion * 100) / element.meta : 0,
+                indicador: (element.controles && element.controles != '' && element.controles != null) ? element.controles : 0,
                 foto: element.foto
             });
-            indicadores[0].total = parseInt(element.de);
-            indicadores[1].total = parseInt(element.de);
-            indicadores[2].total += parseInt(element.controles);
-            indicadores[3].total += Math.round(parseFloat(element.generacion));
-            indicadores[4].total += Math.round(parseFloat(element.recuperacion));
+            indicadores[0].total += Math.round(parseFloat(element.recuperacion));          
+            indicadores[1].total += Math.round(parseFloat(element.generacion));
+            indicadores[2].total += (element.controles && element.controles != '' && element.controles != null) ? parseInt(element.controles) : 0;            
         });
 
-        ordenarArrAcs(indicadores[0].gestores, 'indicador');
-        ordenarArrAcs(indicadores[1].gestores, 'indicador');
+        ordenarArrDesc(indicadores[0].gestores, 'indicador');
+        ordenarArrDesc(indicadores[1].gestores, 'indicador');
         ordenarArrDesc(indicadores[2].gestores, 'indicador');
-        ordenarArrDesc(indicadores[3].gestores, 'indicador');
-        ordenarArrDesc(indicadores[4].gestores, 'indicador');
 
         return res.status(200).json({
             message: 'success',

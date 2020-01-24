@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Form, Select, Button, Switch, Tooltip, Icon, Input, InputNumber, message } from 'antd';
+import { Form, Select, Button, Switch, Tooltip, Icon, Input, InputNumber, message, Upload } from 'antd';
 import io from 'socket.io-client';
 
 import _server from '../../_services/server.services';
@@ -18,7 +18,9 @@ class Message extends Component {
             frm_activo: true,
             todos: true,
             title: 'Envia a todos los destinatarios!',
-            tipo: 0
+            tipo: 0,
+            file: null,
+            subiendo: false
         };
     }
 
@@ -29,9 +31,32 @@ class Message extends Component {
     render() {
         const { supervisores } = this.props;
         const { getFieldDecorator } = this.props.form;
-        const { todos, title, frm_activo, tipo } = this.state;
+        const { todos, title, frm_activo, tipo, subiendo } = this.state;
+        const propsUpload = {
+            disabled: subiendo,
+            onChange: info => {
+                if (info.file.status == 'done') {
+                    this.props.form.setFieldsValue({
+                        ['mensaje']: info.file.response.name, subiendo
+                    });
+                    this.setState({ subiendo: false });
+                }
+                if (info.file.status == 'uploding') {
+                    this.setState({ subiendo: true });
+                }
+                if (info.file.status == 'error') {
+                    message.error('Es permitido solo formatos mp4 o mp3');
+                    this.setState({ subiendo: false });
+                }
+            },
+            multiple: false,
+            className: 'upload-list-inline',
+            name: 'file',
+            action: `${_server._url}${_server._port}/api/multimedia/uploadVideo`
+        };
+
         return (
-            <div className="container pt-3">
+            <div className="container pt-3" style={{height: '100%', overflowY: 'auto'}}>
                 <div className="row">
                     <div className="col-md-4 offset-md-4 text-center">
                         <h3>Mensajes</h3>
@@ -43,7 +68,7 @@ class Message extends Component {
                     <div className="col-md-8 offset-md-2 bordered">
                         <Form ref={ref => this.formulario = ref} onSubmit={this.handleEnviarMsj.bind(this)}>
 
-                        <Item label="Tipo de mensaje">
+                            <Item label="Tipo de mensaje">
                                 {getFieldDecorator('tipo', {
                                     rules: [{ required: true, message: 'Por favor seleccione una opcion!' }],
                                     initialValue: tipo
@@ -63,7 +88,7 @@ class Message extends Component {
                             </Item>
 
                             <div className="row">
-                                <div className="col-10">
+                                <div className="col-md-10">
                                     <Item label="Destinatario">
                                         {getFieldDecorator('supervisores', {
                                             rules: [{ required: !todos, message: 'Por favor seleccione el destinatario!' }],
@@ -86,7 +111,7 @@ class Message extends Component {
                                         )}
                                     </Item>
                                 </div>
-                                <div className="col-2 pt-5">
+                                <div className="col-md-2 pt-5">
                                     <Switch
                                         checkedChildren={<Tooltip title={title}> Todos <Icon type="check" /> </Tooltip>}
                                         unCheckedChildren={<Tooltip title={title}> Todos <Icon type="close" /></Tooltip>}
@@ -128,8 +153,26 @@ class Message extends Component {
                                             )}
                                         </Item>
                                     </div>
-                                </div>    
-                            }                        
+                                </div>
+                            }
+
+                            {tipo == 1 &&
+                                <div className="row">
+                                    <div className="col-md-4 offset-md-8 text-right">
+                                        <Tooltip className="ml-1" title="Permite el ingreso de conto y venta por medio de un archivo xsl al sistema">
+                                            <Upload {...propsUpload}>
+                                                <Button
+                                                    type="default"
+                                                    className="bg-info text-white btn-block"
+                                                    htmlType="button"
+                                                >
+                                                    <Icon type="upload" /> Video
+                                                </Button>
+                                            </Upload>
+                                        </Tooltip>
+                                    </div>
+                                </div>
+                            }
 
                             <Item label="Mensaje">
                                 {getFieldDecorator('mensaje', {
@@ -140,7 +183,7 @@ class Message extends Component {
                                 )}
                             </Item>
 
-                            <Button type="primary" htmlType="submit" block>
+                            <Button type="primary" htmlType="submit" block disabled={subiendo}>
                                 Enviar
                             </Button>
                         </Form>

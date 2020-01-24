@@ -7,7 +7,8 @@ const _HEADERS = {
 const http = {
     _POST,
     _GET,
-    _PUT
+    _PUT,
+    _POSTMEDIA
 }
 
 function _PUT(_url, _data) {
@@ -30,6 +31,16 @@ function _GET(_url) {
     return fetch(_URL + _url, {
         method: 'GET',
         headers: _HEADERS
+    }).then(handleResponse);
+}
+
+function _POSTMEDIA(_url, _data) {
+    return fetch(_URL + _url, {
+        method: 'POST',
+        headers: {            
+            "Accept": "application/json"
+        },
+        body: _data
     }).then(handleResponse);
 }
 
