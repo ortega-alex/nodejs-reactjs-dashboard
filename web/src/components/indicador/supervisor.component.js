@@ -19,8 +19,11 @@ class Supervisor extends Component {
     render() {
         const { supervisores } = this.props;
         return (
-            <div className="p-3">
-                <div className="row" style={{ height: window.innerHeight + 100, overflowY: 'auto' }}>
+            <div>
+                {/* <div className="row">
+                    Menu
+                </div> */}
+                <div className="row" style={{ overflowY: 'auto' }}>
                     {supervisores && supervisores.map((res, i) => {
                         return (
                             <div className="col-md-3 m-0 p-0" key={i}>

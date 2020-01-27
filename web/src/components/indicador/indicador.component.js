@@ -56,7 +56,7 @@ class Indicador extends Component {
             }
         };
         return (
-            <div>
+            <div className="container">
                 {(vista == 1) &&
                     <Supervisor changeView={this.handleChangeView.bind(this)} />
                 }

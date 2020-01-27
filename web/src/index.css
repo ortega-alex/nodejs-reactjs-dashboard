@@ -157,6 +157,7 @@ code {
 }
 
 /* menor de 300 */
+
 #titlecontent-menor {
     position: absolute;
     top: 100%;
@@ -219,7 +220,7 @@ code {
 .indicadores-gestores {
     position: relative;
     height: 100%;
-    min-width: 31% !important;
+    min-width: 33% !important;
     text-align: center;
 }
 
@@ -238,11 +239,24 @@ code {
 .logo-departamento {
     position: absolute;
     bottom: 10px;
-    right: 100px;
+    right: 10px;
 }
 
 .logo-oca {
     position: absolute;
     bottom: 10px;
     left: 10px;
+}
+
+#sticky-footer {
+    position: absolute;
+    bottom: 10px;
+    width: 100% !important;
+}
+
+.gestores {
+    width: 100%;
+    display: flex;
+    direction: row;
+    justify-content: center;
 }

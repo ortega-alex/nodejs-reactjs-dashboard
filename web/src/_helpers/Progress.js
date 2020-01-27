@@ -44,38 +44,39 @@ class Progress extends Component {
                     <p className="m-0 p-0 h1"><b>{tipo} {Function.commaSeparateNumber(indicador)}</b></p>
                 </div>
                 :
-                <div style={{ height: '100%', width: '100%', position: 'relative', display: 'flex', justifyContent: 'center' }}>
-                    <div
-                        style={{
-                            width: width,
-                            height: `${progress}%`,
-                            backgroundColor: Function.colorPorcentaje(progress),
-                            position: 'absolute',
-                            bottom: '30%'
-                        }}>
+                <div style={{ height: '100%', width: '100%' }}>
+                    <div style={{ height: '80%', display: 'flex', justifyContent: 'center', position: 'relative' }}>
+                        <div
+                            style={{
+                                width: width,
+                                height: `${progress}%`,
+                                backgroundColor: Function.colorPorcentaje(progress),
+                                position: 'absolute',
+                                bottom: '0%'
+                            }}>
+                        </div>
                     </div>
-                    <p
-                        className="m-0 p-0 h1"
-                        style={{
-                            position: 'absolute',
-                            bottom: -2,
-                            width: '100%',
-                            textAlign: 'center'
-                        }}
-                    >
-                        <b> {tipo} {Function.commaSeparateNumber(indicador)}</b>
-                    </p>
+                    <div style={{ height: '20%', position: 'relative' }}>
+                        <p
+                            className="m-0 p-0 h2"
+                            style={{
+                                position: 'absolute',
+                                bottom: 0,
+                                width: '100%',
+                                textAlign: 'center'
+                            }}
+                        >
+                            <b> {tipo} {Function.commaSeparateNumber(indicador)}</b>
+                        </p>
+                    </div>
                 </div>
         );
     }
 
     handleAumentarPorcentaje() {
         const { progress } = this.state;
-        const { indicador, total, invertir } = this.props;
+        const { indicador, total } = this.props;
         var porcentaje = (total != 0) ? ((indicador * 100) / total) : 0;
-        if (!invertir) {
-            porcentaje = (100 - porcentaje);
-        }
         var _progress = (progress + 5);
         this.setState({ progress: _progress });
         if (_progress >= porcentaje || _progress == 100) {

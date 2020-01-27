@@ -115,7 +115,7 @@ class Menu extends Component {
                     </div>
                 }
 
-                <Route path="/" exact component={Indicador} />
+                <Route path="/" exact component={Indicador}/>
                 <Route path="/msj" component={Message} />
             </HashRouter>
         );

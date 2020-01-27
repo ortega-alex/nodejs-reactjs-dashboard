@@ -12,8 +12,12 @@ function message(typo, menssage) {
     Message[typo](menssage);
 }
 
-function remplazarEspacios_(val) {
+function remplazarEspacios(val) {
     return val.replace(/ /g, '_');
+}
+
+function remplazarEspacios_(val) {
+    return val.replace(/_/g, ' ');
 }
 
 function getImage(name) {
@@ -66,7 +70,8 @@ const Function = {
     ordenarArrDesc,
     commaSeparateNumber,
     colorPorcentaje,
-    getLogoDepartamento
+    getLogoDepartamento,
+    remplazarEspacios
 }
 
 export default Function;

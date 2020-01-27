@@ -72,13 +72,13 @@ export async function getGestoresPorSuper(req, res) {
         const { id_supervisor } = req.params;
         if (!id_supervisor) return res.json({ err: true, msj: 'Falta informacion!' });
 
-        var indicadores = [            
+        var indicadores = [
             { tipo: 'Q', titulo: 'Recuperación acumulada', total: 0, gestores: [] },
-            { tipo: 'Q', titulo: 'Generación de promesas del día', total: 0, gestores: [] },            
-            { tipo: 'Controles:', titulo: 'Controles del día', total: 0, gestores: [] }
+            { tipo: 'Q', titulo: 'Generación de promesas del día', total: 0, gestores: [] },
+            { tipo: '', titulo: 'Controles del día', total: 0, gestores: [] }
         ];
 
-        var strQuery = `SELECT a.id_usuario, 
+        var strQuery = `SELECT a.id_usuario,
                                 CASE 
                                     WHEN a.generacion_diaria IS NULL THEN 0
                                     ELSE a.generacion_diaria
@@ -108,43 +108,94 @@ export async function getGestoresPorSuper(req, res) {
         var result = await db_mssql.pool.request().query(strQuery);
         var arr = result.recordset;
         arr.forEach(element => {
+            // recuperacion
             indicadores[0].gestores.push({
                 id_usuario: element.id_usuario,
                 nombres: element.nombres,
                 apellidos: element.apellidos,
                 nombre_completo: element.nombre_completo,
+                foto: element.foto,
                 indicador: Math.round(parseFloat(element.recuperacion)),
                 meta: element.meta > 0 ? (element.recuperacion * 100) / element.meta : 0,
-                foto: element.foto
-            });           
+            });
+
+            // generacion
             indicadores[1].gestores.push({
                 id_usuario: element.id_usuario,
                 nombres: element.nombres,
                 apellidos: element.apellidos,
                 nombre_completo: element.nombre_completo,
+                foto: element.foto,
                 indicador: Math.round(parseFloat(element.generacion)),
-                foto: element.foto
-            });          
+                meta: element.meta > 0 ? (element.generacion * 100) / element.meta : 0
+            });
+
+            // controles
             indicadores[2].gestores.push({
                 id_usuario: element.id_usuario,
                 nombres: element.nombres,
                 apellidos: element.apellidos,
                 nombre_completo: element.nombre_completo,
+                foto: element.foto,
                 indicador: (element.controles && element.controles != '' && element.controles != null) ? element.controles : 0,
-                foto: element.foto
+                meta: 0,
             });
-            indicadores[0].total += Math.round(parseFloat(element.recuperacion));          
+
+            indicadores[0].total += Math.round(parseFloat(element.recuperacion));
             indicadores[1].total += Math.round(parseFloat(element.generacion));
-            indicadores[2].total += (element.controles && element.controles != '' && element.controles != null) ? parseInt(element.controles) : 0;            
+            indicadores[2].total += (element.controles && element.controles != '' && element.controles != null) ? parseInt(element.controles) : 0;
         });
 
         ordenarArrDesc(indicadores[0].gestores, 'indicador');
         ordenarArrDesc(indicadores[1].gestores, 'indicador');
         ordenarArrDesc(indicadores[2].gestores, 'indicador');
 
+        strQuery = `SELECT CASE 
+                            WHEN a.recuperacion_acumulada IS NULL THEN 0
+                            ELSE a.recuperacion_acumulada
+                        END AS indicador,
+                        b.id_usuario, b.nombres, b.apellidos,
+                        c.dir_foto AS foto,
+                        d.id_usuario AS id_supervisor, d.nombres AS nombres_super, d.apellidos AS apellidos_super,
+                        e.dir_foto AS foto_super,
+                        f.id_grupo_producto AS id_producto, f.grupo_producto AS producto
+                    FROM proyector..proyector_diario_top10 a
+                    INNER JOIN oca_sac..usuarios b ON a.id_usuario = b.id_usuario
+                    LEFT JOIN oca_sac..usuario_fotografia c ON b.id_usuario = c.id_usuario
+                    INNER JOIN oca_sac..usuarios d ON a.id_usuario_supervisor = d.id_usuario
+                    LEFT JOIN oca_sac..usuario_fotografia e ON d.id_usuario = e.id_usuario
+                    INNER JOIN proyector..proyector_diario_grupos_productos f ON a.id_grupo_producto = f.id_grupo_producto
+                    WHERE a.id = (  SELECT top 1 c.id
+                                    FROM proyector..proyector_diario_top10 c 
+                                    WHERE a.id_usuario = c.id_usuario
+                                    order by ef_no_cuentas_actuales desc)
+                    AND a.id_grupo_producto IN( SELECT id_grupo_producto
+                                                FROM proyector..proyector_diario_top10_supervisores
+                                                WHERE id_usuario_supervisor = ${id_supervisor})
+                    ORDER BY indicador DESC`;
+
+        var result = await db_mssql.pool.request().query(strQuery);
+        var arr = result.recordset;
+        var ultimos_3 = arr.length > 0 ? arr.length - 4 : 0;
+        var top_primeros_3 = [];
+        var top_ultimos_3 = [];
+        arr.forEach((element, i) => {
+            if (i <= 2) {
+                top_primeros_3.push(element);
+            }
+
+            if (i > ultimos_3) {
+                top_ultimos_3.push(element);
+            }
+        });
+
+        ordenarArrAcs(top_ultimos_3, 'indicador');
+
         return res.status(200).json({
             message: 'success',
-            indicadores
+            indicadores,
+            top_primeros_3,
+            top_ultimos_3
         });
     } catch (err) {
         res.status(500).json({
