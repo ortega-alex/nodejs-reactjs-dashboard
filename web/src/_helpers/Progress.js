@@ -21,7 +21,7 @@ class Progress extends Component {
     }
 
     render() {
-        const { height, width, direccion, tipo, indicador } = this.props;
+        const { height, width, direccion, tipo, gestor } = this.props;
         const { progress } = this.state;
         return (
             direccion == 0 ?
@@ -36,12 +36,12 @@ class Progress extends Component {
                         <div
                             style={{
                                 height: '100%',
-                                width: `${progress}%`,
-                                backgroundColor: Function.colorPorcentaje(progress),
+                                width: `${gestor.meta && gestor.meta < 100 ? gestor.meta : 100}%`,
+                                backgroundColor: Function.colorPorcentaje(gestor.meta && gestor.meta < 100 ? gestor.meta : 100),
                             }}>
                         </div>
                     </div>
-                    <p className="m-0 p-0 h1"><b>{tipo} {Function.commaSeparateNumber(indicador)}</b></p>
+                    <p className="m-0 p-0 h1"><b>{tipo} {Function.commaSeparateNumber(gestor.indicador)}</b></p>
                 </div>
                 :
                 <div style={{ height: '100%', width: '100%' }}>
@@ -66,7 +66,7 @@ class Progress extends Component {
                                 textAlign: 'center'
                             }}
                         >
-                            <b> {tipo} {Function.commaSeparateNumber(indicador)}</b>
+                            <b> {tipo} {Function.commaSeparateNumber(gestor.indicador)}</b>
                         </p>
                     </div>
                 </div>
@@ -75,11 +75,10 @@ class Progress extends Component {
 
     handleAumentarPorcentaje() {
         const { progress } = this.state;
-        const { indicador, total } = this.props;
-        var porcentaje = (total != 0) ? ((indicador * 100) / total) : 0;
+        const { gestor } = this.props;
         var _progress = (progress + 5);
         this.setState({ progress: _progress });
-        if (_progress >= porcentaje || _progress == 100) {
+        if (_progress >= gestor.meta || _progress == 100) {
             clearInterval(this.state.time);
         }
     }

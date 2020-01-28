@@ -29,9 +29,8 @@ class Posicion extends Component {
                                     height="0"
                                     width="50%"
                                     direccion={1}
-                                    indicador={indicador.gestores[0].indicador}
+                                    gestor={indicador.gestores[0]}
                                     tipo={indicador.tipo}
-                                    total={indicador.total}
                                 />
                             </div>
                         </div>
@@ -41,9 +40,8 @@ class Posicion extends Component {
                                     height="0"
                                     width="50%"
                                     direccion={1}
-                                    indicador={indicador.gestores[indicador.gestores.length - 1].indicador}
+                                    gestor={indicador.gestores[indicador.gestores.length - 1]}
                                     tipo={indicador.tipo}
-                                    total={indicador.total}
                                 />
                             </div>
                         </div>

@@ -21,8 +21,9 @@ function remplazarEspacios_(val) {
 }
 
 function getImage(name) {
+    var _name = decodeURIComponent(escape(name));
     // var path = remplazarEspacios_(name.trim());
-    return _URL_IMG + name;//+ ".jpg";
+    return _URL_IMG + _name;//+ ".jpg";
 }
 
 function getFondo(id_dep) {

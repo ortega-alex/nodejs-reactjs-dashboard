@@ -151,11 +151,15 @@ class Indicador extends Component {
                 this.setState({ _message: url, visible: true, tipo_mensaje: 3 }, () => {
                     setTimeout(() => {
                         var vid = document.getElementById("mytest");
-                        this.setState({
-                            _timer: setTimeout(() => {
-                                this.handleDrawerClose();
-                            }, vid.duration * 1000)
-                        });
+                        if (vid.duration) {
+                            this.setState({
+                                _timer: setTimeout(() => {
+                                    this.handleDrawerClose();
+                                }, vid.duration * 1000)
+                            });
+                        } else {
+                            this.handleDrawerClose();
+                        }
                     }, 2000);
                 });
             } else {

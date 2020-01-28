@@ -2,10 +2,16 @@ import React, { Component } from 'react';
 import { AsyncStorage } from 'AsyncStorage';
 import store from './ConfigureStore';
 import { Provider } from 'react-redux';
+import io from 'socket.io-client';
 
 import Loading from '../_helpers/Loading';
 import Login from './login/login.component';
 import Menu from './menu/menu.component';
+import _server from '../_services/server.services';
+
+const socket = io(_server._url + _server._port);
+var thema = undefined;
+var color_thema = 'balck';
 
 class App extends Component {
 
@@ -13,19 +19,31 @@ class App extends Component {
     super();
     this.state = {
       cargando: true,
-      login: undefined
+      login: undefined,
+      thema: undefined
     }
   }
 
   componentWillMount() {
     this.comprobarSesion();
+    AsyncStorage.getItem('menu_dashborad', (err, res) => {
+      if (!err && res && res != "undefined") {
+        var menu = JSON.parse(res);
+        if (menu.thema && menu.thema != null) {
+          thema = menu.thema;
+        }
+        if (menu.color && menu.color_thema != null) {
+          color_thema = menu.color_thema;
+        }
+      }
+    });
   }
 
   render() {
     const { cargando, login } = this.state;
     return (
       <Provider store={store}>
-        <div style={styles.component}>
+        <div style={thema ? styles.thema : styles.component}>
           {(cargando == true) &&
             <div style={styles.fondo}>
               <Loading />
@@ -55,6 +73,16 @@ class App extends Component {
 
 const styles = {
   component: { display: 'flex', height: '100vh', width: '100%', overflow: 'hidden', backgroundColor: '#e0e0e0' },
+  thema: {
+    display: 'flex', height: '100vh', width: '100%', overflow: 'hidden',
+    justifyContent: 'center',
+    backgroundImage: `url(${_server._url + _server._port}/img/${thema})`,
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
+    overflow: 'hidden',
+    color: color_thema
+  },
   fondo: {
     display: "flex",
     width: "100%",

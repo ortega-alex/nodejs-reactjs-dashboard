@@ -74,37 +74,28 @@ export async function getGestoresPorSuper(req, res) {
 
         var indicadores = [
             { tipo: 'Q', titulo: 'Recuperación acumulada', total: 0, gestores: [] },
-            { tipo: 'Q', titulo: 'Generación de promesas del día', total: 0, gestores: [] },
+            { tipo: 'Q', titulo: 'Generación de promesas', total: 0, gestores: [] },
             { tipo: '', titulo: 'Controles del día', total: 0, gestores: [] }
         ];
-
-        var strQuery = `SELECT a.id_usuario,
-                                CASE 
-                                    WHEN a.generacion_diaria IS NULL THEN 0
-                                    ELSE a.generacion_diaria
-                                END AS generacion, 
-                                (SELECT SUM(total_controles)
-                                FROM proyector..proyector_diario_controles_x_hora
-                                WHERE id_usuario = a.id_usuario
-                                GROUP BY id_usuario) AS controles,
-                                CASE 
-                                    WHEN a.recuperacion_acumulada IS NULL THEN 0
-                                    ELSE a.recuperacion_acumulada
-                                END AS recuperacion,
-                                b.nombres, b.apellidos, b.nombre_completo,
-                                c.dir_foto AS foto,
-                                (	SELECT top 1 Meta_Mensual 
-                                    FROM proyector..proyector_diario_metas_usuarios 
-                                    WHERE id_usuario = a.id_usuario 
-                                    ORDER BY id DESC) AS meta
+        
+        var strQuery = ` SELECT a.id_usuario,
+                                SUM(a.generacion_diaria) AS generacion, 
+                            (SELECT SUM(total_controles)
+                            FROM proyector..proyector_diario_controles_x_hora
+                            WHERE id_usuario = a.id_usuario
+                            GROUP BY id_usuario) AS controles,
+                            SUM(a.recuperacion_acumulada) AS recuperacion, 
+                            b.nombres, b.apellidos, b.nombre_completo,
+                            c.dir_foto AS foto,
+                            (	SELECT top 1 Meta_Mensual 
+                                FROM proyector..proyector_diario_metas_usuarios 
+                                WHERE id_usuario = a.id_usuario 
+                                ORDER BY id DESC) AS meta
                         FROM proyector..proyector_diario_top10 a
                         INNER JOIN oca_sac..usuarios b ON a.id_usuario = b.id_usuario
                         LEFT JOIN oca_sac..usuario_fotografia c ON b.id_usuario = c.id_usuario
-                        WHERE a.id = ( SELECT top 1 c.id
-                                        FROM proyector..proyector_diario_top10 c 
-                                        WHERE a.id_usuario = c.id_usuario
-                                        order by ef_no_cuentas_actuales desc)
-                        AND a.id_usuario_supervisor = ${id_supervisor}`;
+                        WHERE  a.id_usuario_supervisor = ${id_supervisor}
+                        GROUP BY a.id_usuario, b.nombres, b.apellidos, b.nombre_completo, c.dir_foto`
         var result = await db_mssql.pool.request().query(strQuery);
         var arr = result.recordset;
         arr.forEach(element => {
@@ -138,7 +129,7 @@ export async function getGestoresPorSuper(req, res) {
                 nombre_completo: element.nombre_completo,
                 foto: element.foto,
                 indicador: (element.controles && element.controles != '' && element.controles != null) ? element.controles : 0,
-                meta: 0,
+                meta: element.controles > 0 ? (element.controles * 100) / 60 : 0,
             });
 
             indicadores[0].total += Math.round(parseFloat(element.recuperacion));

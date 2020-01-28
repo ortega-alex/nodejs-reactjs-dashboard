@@ -16,15 +16,15 @@ class Top extends Component {
                 {top && top.map((item, i) => {
                     return (
                         <div className="col-md-4" key={i}>
-                            <div style={{ height: '80%' }}>
+                            <div style={{ height: '77%' }}>
                                 <Target
                                     lugar={lugar}
                                     tipo="Q"
                                     usuario={item}
-                                    descripcion={(i + 1) + " lugar"}
+                                    descripcion={(lugar != 3 ? (i + 1) : '') + " lugar"}
                                 />
                             </div>
-                            <div className="text-center" style={{ height: '20%' }}>
+                            <div className="text-center" style={{ height: '19%' }}>
                                 <p className="m-0 p-0 w-100 h1">{item.nombres_super.split(' ')[0]} {item.apellidos_super.split(' ')[0]}</p>
                                 <p className="m-0 p-0 w-100 h1">{Function.remplazarEspacios_(item.producto)}</p>
                             </div>

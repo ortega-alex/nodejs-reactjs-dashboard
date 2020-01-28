@@ -10,11 +10,15 @@ class Grupo extends Component {
         super(props);
     }
 
+    componentDidMount(){
+        console.log("en cada intervalo");
+    }
+
     render() {
-        const { gestores, total, tipo } = this.props;
+        const { gestores, tipo, intervalo } = this.props;
         return (
             <div className="gestores">
-                {gestores.map((res, i) => {
+                {gestores && gestores.map((res, i) => {
                     return (
                         <div key={i} className="indicadores-gestores pt-1" >
                             <div style={{ height: 170, width: '100%' }}>
@@ -36,7 +40,10 @@ class Grupo extends Component {
                                 />
                             </div>
                             <p className="m-0 p-0 h1">
-                                <b>{res.nombres.split(' ')[0]} {res.apellidos.split(' ')[0]}</b>
+                                <b> #{i + intervalo} {res.nombres.split(' ')[0]}</b>
+                            </p>
+                            <p className="m-0 p-0 h1">
+                                <b> {res.apellidos.split(' ')[0]}</b>
                             </p>
                             <div
                                 style={{
@@ -48,9 +55,8 @@ class Grupo extends Component {
                                     height="25px"
                                     width="0"
                                     direccion={0}
-                                    indicador={res.indicador}
+                                    gestor={res}
                                     tipo={tipo}
-                                    total={total}
                                 />
                             </div>
                         </div>

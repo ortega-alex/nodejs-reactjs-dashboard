@@ -8,7 +8,7 @@ import Grupo from './pantallas/grupo.component';
 import Top from './pantallas/top.component';
 
 const logoOca = require('../../media/logo_oca.png');
-const _intervalo = 60000;
+const _intervalo = 30000;
 
 class Gestor extends Component {
     constructor(props) {
@@ -17,6 +17,7 @@ class Gestor extends Component {
             titulo: null,
             descripcion: null,
             interval_transicion: null,
+            interval_consulta: null,
             indicadores_intervalos: undefined,
             transicion: 0,
             intervalo: 0,
@@ -26,6 +27,7 @@ class Gestor extends Component {
 
     componentDidMount() {
         this.handleGetIndicador();
+        this.setState({ interval_consulta: setInterval(() => { this.handleGetIndicador() }, 1800000) });
     }
 
     componentWillUnmount() {
@@ -66,7 +68,7 @@ class Gestor extends Component {
     handleView() {
         const { indicadores, top_primeros_3, top_ultimos_3 } = this.props;
         const { indicadores_intervalos, transicion, intervalo, vista_top } = this.state;
-        if (!indicadores_intervalos) {
+        if (!indicadores_intervalos) {            
             var _intervalos = {
                 transiciones: indicadores.length,
                 intervalos: []
@@ -74,6 +76,7 @@ class Gestor extends Component {
             indicadores.forEach((element, i) => {
                 _intervalos.intervalos[i] = Math.ceil(element.gestores.length / 3);
             });
+            console.log("entra", _intervalos);
             this.setState({
                 indicadores_intervalos: _intervalos, interval_transicion: setInterval(() => {
                     this.handleProgramarIntervalo()
@@ -88,10 +91,10 @@ class Gestor extends Component {
                 <div className="row text-center">
                     {indicadores_intervalos && indicadores &&
                         <div className="col-md-8 offset-md-2">
-                            <h1 className="m-0 p-0">
+                            <p className="m-0 p-0 h1">
                                 {transicion < indicadores_intervalos.transiciones ?
-                                    indicadores[transicion].titulo : "Top 3 recuperación por producto"}
-                            </h1>
+                                    indicadores[transicion].titulo : ((vista_top == 0 ? "Top 3 " : "") + "recuperación por producto")}
+                            </p>
                             {(transicion < indicadores_intervalos.transiciones) ?
                                 <p className="p-0 m-0 h1">Total: {indicadores[transicion].tipo} {Function.commaSeparateNumber(indicadores[transicion].total)}</p>
                                 : <p className="p-0 m-0 h1">{vista_top == 0 ? 'Primeros ' : 'Ultimos '} lugares</p>
@@ -112,8 +115,8 @@ class Gestor extends Component {
                     transicion < indicadores_intervalos.transiciones) &&
                     <Grupo
                         gestores={this.handleGetGrupo(indicadores[transicion].gestores)}
-                        total={indicadores[transicion].total}
                         tipo={indicadores[transicion].tipo}
+                        intervalo={intervalo > 1 ? (((intervalo - 1) * 3) + 1) : 1}
                     />
                 }
 
@@ -162,6 +165,17 @@ class Gestor extends Component {
 
     handleClearInterval() {
         clearInterval(this.state.interval_transicion);
+        clearInterval(this.state.interval_trinterval_consultansicion);
+        this.setState({
+            titulo: null,
+            descripcion: null,
+            interval_transicion: null,
+            interval_consulta: null,
+            indicadores_intervalos: undefined,
+            transicion: 0,
+            intervalo: 0,
+            vista_top: 0
+        });
     }
 }
 
