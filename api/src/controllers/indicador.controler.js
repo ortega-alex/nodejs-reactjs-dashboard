@@ -4,9 +4,9 @@ import { ordenarArrDesc, ordenarArrAcs } from '../config/helper';
 
 export async function getSupervisores(req, res) {
     try {
-        strQuery = `SELECT a.id_usuario_supervisor AS id_supervisor,
-                            a.generacion_diaria as generacion, 
-                            a.recuperacion_acumulada AS recuperacion, 
+        strQuery = `SELECT SUM(a.id_usuario_supervisor) AS id_supervisor,
+                            SUM(a.generacion_diaria) as generacion, 
+                            SUM(a.recuperacion_acumulada) AS recuperacion, 
                             b.dir_foto,
                             (	SELECT top 1 Meta_Mensual 
                                 FROM proyector..proyector_diario_metas_usuarios 
@@ -14,10 +14,7 @@ export async function getSupervisores(req, res) {
                                 ORDER BY id DESC) AS meta
                     FROM proyector..proyector_diario_top10_supervisores a 
                     LEFT JOIN oca_sac..usuario_fotografia b ON a.id_usuario_supervisor = b.id_usuario
-                    WHERE a.id = (	SELECT TOP 1 c.id 
-                                    FROM proyector..proyector_diario_top10_supervisores C
-                                    WHERE c.id_usuario_supervisor = a.id_usuario_supervisor
-                                    ORDER BY c.ef_no_cuentas_actuales DESC)`;
+                    GROUP BY a.id_usuario_supervisor,  b.dir_foto`;
         var result = await db_mssql.pool.request().query(strQuery);
         var indicadores = result.recordset;
 
