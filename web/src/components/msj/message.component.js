@@ -104,7 +104,7 @@ class Message extends Component {
                                             >
                                                 {supervisores && supervisores.map((res, i) => {
                                                     return (
-                                                        <Option key={i} value={res.id_supervisor}>{`${res.primer_nombre} ${res.primer_apellido} | ${res.departamento}`}</Option>
+                                                        <Option key={i} value={res.id_usuario}>{`${res.primer_nombre} ${res.primer_apellido} | ${res.departamento}`}</Option>
                                                     );
                                                 })}
                                             </Select>

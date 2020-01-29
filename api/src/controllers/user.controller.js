@@ -14,7 +14,7 @@ export async function login(req, res) {
                                     ELSE 0
                                 END AS estado,                            
                                 CASE
-                                    WHEN id_usuario IN( 35, 47, 971, 1070, 1120, 1232, 1606, 2490, 625 ) THEN 1
+                                    WHEN id_usuario IN( 35, 47, 625, 971, 1070, 1120, 1232, 1606, 2287, 2490 ) THEN 1
                                     ELSE 0
                                 END AS cargo
                         FROM usuarios

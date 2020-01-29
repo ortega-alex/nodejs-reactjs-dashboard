@@ -52,7 +52,7 @@ class Gestor extends Component {
                             <img height="70" src={logoOca} />
                         </div>
                         <div className="col-4 nombre-super">
-                            <p className="m-0 p-0 w-100 h1"><b>Super: {supervisor.primer_nombre + ' ' + supervisor.primer_apellido}</b></p>
+                            <p className="m-0 p-0 w-100 h1"><b>Sup: {supervisor.primer_nombre + ' ' + supervisor.primer_apellido}</b></p>
                         </div>
                         <div className="col-4 logo-departamento">
                             <img height="90" src={Function.getLogoDepartamento(supervisor.id_cartera_depto)} alt="Sin Logo" />

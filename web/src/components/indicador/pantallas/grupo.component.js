@@ -10,10 +10,6 @@ class Grupo extends Component {
         super(props);
     }
 
-    componentDidMount(){
-        console.log("en cada intervalo");
-    }
-
     render() {
         const { gestores, tipo, intervalo } = this.props;
         return (

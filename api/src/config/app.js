@@ -1,14 +1,11 @@
 import express, { json, url } from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
-// import multer from 'multer';
-// import uuid from 'uuid/v4';
 import path from 'path';
 
 import _user from '../routes/user.routers';
 import _indicador from '../routes/indicador.routers';
 import _media from '../routes/media.routes';
-import _puppeteer from '../routes/pupperteer.routers';
 import fileUpload from 'express-fileupload';
 
 import db_mssql from './db_mssql';
@@ -36,7 +33,6 @@ app.use(fileUpload({
 app.use('/api/user', _user);
 app.use('/api/indicador', _indicador);
 app.use('/api/multimedia', _media);
-app.use('/api/puppeteer', _puppeteer);
 
 //static files
 app.use(express.static(path.join( path.join(__dirname, '../') , 'public')));

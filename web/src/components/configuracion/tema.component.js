@@ -81,7 +81,7 @@ class Tema extends Component {
                     <div className="row">
                         <div className="col-md-4 offset-md-4 text-center">
                             <p className="m-0 p-0 h3">Configuración de tema</p>
-                            <p className="p-0 m-0">Permite configurar un tema y ser trasmitido a todos o a un televisor conectado</p>
+                            <p className="p-0 m-0">Permite configurar un tema y ser trasmitido a todos los televisor conectado</p>
                             <br />
                         </div>
                     </div>

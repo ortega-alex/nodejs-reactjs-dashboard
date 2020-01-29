@@ -21,7 +21,7 @@ class Top extends Component {
                                     lugar={lugar}
                                     tipo="Q"
                                     usuario={item}
-                                    descripcion={(lugar != 3) ? (i + 1) + 'lugar' : undefined}
+                                    descripcion={(lugar != 3) ? (i + 1) + '° lugar' : undefined}
                                 />
                             </div>
                             <div className="text-center" style={{ height: '19%' }}>
