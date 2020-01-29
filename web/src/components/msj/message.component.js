@@ -59,7 +59,7 @@ class Message extends Component {
             <div className="container pt-3" style={{height: '100%', overflowY: 'auto'}}>
                 <div className="row">
                     <div className="col-md-4 offset-md-4 text-center">
-                        <h3>Mensajes</h3>
+                        <p className="m-0 p-0 h3">Mensajes</p>
                         <p className="p-0 m-0">Permite la transmisión de mensajes instantáneos a todos o a un televisor conectado</p>
                         <br />
                     </div>
@@ -159,7 +159,7 @@ class Message extends Component {
                             {tipo == 1 &&
                                 <div className="row">
                                     <div className="col-md-4 offset-md-8 text-right">
-                                        <Tooltip className="ml-1" title="Permite el ingreso de conto y venta por medio de un archivo xsl al sistema">
+                                        <Tooltip className="ml-1" title="Permite cargar un video en formato mp3 o mp4 al sistema">
                                             <Upload {...propsUpload}>
                                                 <Button
                                                     type="default"

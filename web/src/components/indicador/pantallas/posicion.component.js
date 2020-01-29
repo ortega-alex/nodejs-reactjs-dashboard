@@ -52,7 +52,7 @@ class Posicion extends Component {
                         lugar={3}
                         tipo={indicador.tipo}
                         usuario={indicador.gestores[indicador.gestores.length - 1]}
-                        descripcion="Ultimo Lugar"
+                        descripcion="Ultimo lugar"
                     />
                 </div>
             </div>

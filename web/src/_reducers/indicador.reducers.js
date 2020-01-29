@@ -15,7 +15,8 @@ export default function _indicador(state = {}, action) {
         case IndicadorConstants.GET_SPR_SUCCESS:
             return {
                 ...state,
-                supervisores: action.supervisores
+                supervisores: action.supervisores,
+                indicadores: undefined,
             }
         case IndicadorConstants.GET_GTR_SUCCESS:
             return {

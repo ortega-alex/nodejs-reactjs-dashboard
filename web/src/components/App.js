@@ -10,9 +10,6 @@ import Menu from './menu/menu.component';
 import _server from '../_services/server.services';
 
 const socket = io(_server._url + _server._port);
-var thema = undefined;
-var color_thema = 'balck';
-
 class App extends Component {
 
   constructor() {
@@ -20,7 +17,8 @@ class App extends Component {
     this.state = {
       cargando: true,
       login: undefined,
-      thema: undefined
+      tema: undefined,
+      color_tema: 'black'
     }
   }
 
@@ -29,32 +27,58 @@ class App extends Component {
     AsyncStorage.getItem('menu_dashborad', (err, res) => {
       if (!err && res && res != "undefined") {
         var menu = JSON.parse(res);
-        if (menu.thema && menu.thema != null) {
-          thema = menu.thema;
+        if (menu.tema && menu.tema != null) {
+          this.setState({ tema: menu.tema });
         }
-        if (menu.color && menu.color_thema != null) {
-          color_thema = menu.color_thema;
+        if (menu.color_tema && menu.color_tema != null) {
+          this.setState({ color_tema: menu.color_tema });
         }
       }
+    });
+
+    socket.on("tema", (values) => {
+      this.setState({ tema: values.tema, color_tema: values.color_tema });
+      AsyncStorage.getItem('menu_dashborad', (err, res) => {
+        if (!err && res && res != "undefined") {
+          var menu = JSON.parse(res);
+          menu.tema = values.tema;
+          menu.color_tema = values.color_tema;
+          AsyncStorage.setItem('menu_dashborad', JSON.stringify(menu));
+        } else {
+          const menu = {tema: values.tema, color_tema: values.color_tema};
+          AsyncStorage.setItem('menu_dashborad', JSON.stringify(menu));
+        }
+      });
     });
   }
 
   render() {
-    const { cargando, login } = this.state;
+    const { cargando, login, tema, color_tema } = this.state;
     return (
       <Provider store={store}>
-        <div style={thema ? styles.thema : styles.component}>
-          {(cargando == true) &&
-            <div style={styles.fondo}>
-              <Loading />
-            </div>
-          }
-          {(login == true) &&
-            <Menu />
-          }
-          {(login == false) &&
-            <Login />
-          }
+        <div style={styles.component}>
+          <div style={{
+            display: 'flex', height: '100vh', width: '100%', overflow: 'hidden',
+            justifyContent: 'center',
+            backgroundImage: 'url(' + _server._url + _server._port + '/img/' + tema + ')',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            overflow: 'hidden',
+            color: color_tema
+          }}>
+            {(cargando == true) &&
+              <div style={styles.fondo}>
+                <Loading />
+              </div>
+            }
+            {(login == true) &&
+              <Menu />
+            }
+            {(login == false) &&
+              <Login />
+            }
+          </div>
         </div>
       </Provider>
     );
@@ -73,16 +97,6 @@ class App extends Component {
 
 const styles = {
   component: { display: 'flex', height: '100vh', width: '100%', overflow: 'hidden', backgroundColor: '#e0e0e0' },
-  thema: {
-    display: 'flex', height: '100vh', width: '100%', overflow: 'hidden',
-    justifyContent: 'center',
-    backgroundImage: `url(${_server._url + _server._port}/img/${thema})`,
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
-    overflow: 'hidden',
-    color: color_thema
-  },
   fondo: {
     display: "flex",
     width: "100%",

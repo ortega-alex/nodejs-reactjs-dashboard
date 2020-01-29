@@ -13,7 +13,7 @@ class Target extends Component {
         const { lugar, tipo, usuario, descripcion, total } = this.props;
         return (
             <div className={`target ${Function.getFondo(lugar)}`} >
-                <div style={{height: 155, width: '100%'}}>
+                <div style={{ height: 155, width: '100%' }}>
                     <img
                         height="155"
                         width="155"
@@ -27,11 +27,13 @@ class Target extends Component {
                     className="icon-target"
                 />
                 <p className="m-0 p-0 w-100 h1">{usuario.nombres.split(' ')[0]} {usuario.apellidos.split(' ')[0]}</p>
-                <p className="m-0 p-0 w-100 h1">{descripcion}</p>
+                {descripcion &&
+                    <p className="m-0 p-0 w-100 h1 text-dark">{descripcion}</p>
+                }
                 <p className="m-0 p-0 w-100 h1">{tipo} {Function.commaSeparateNumber(Math.round(usuario.indicador))}</p>
-                { total &&
+                {total &&
                     <p className="m-0 p-0 w-100 h1">Total: Q {Function.commaSeparateNumber(total)}</p>
-                }               
+                }
             </div>
         );
     }

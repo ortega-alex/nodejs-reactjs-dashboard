@@ -14,12 +14,6 @@ const db_mysql = {
         password: process.env.MYSQL_30_PASS,
         database: process.env.MYSQL_30_DATABASE,
     },
-    config_local: {
-        host: process.env.MYSQL_LOCAL_HOST,
-        user: process.env.MYSQL_LOCAL_USER,
-        password: process.env.MYSQL_LOCAL_PASS,
-        database: process.env.MYSQL_LOCAL_DATABASE,
-    },
     config_27: {
         host: process.env.MYSQL_27_HOST,
         user: process.env.MYSQL_27_USER,
@@ -57,20 +51,6 @@ db_mysql.connection_30 = () => {
         if (connection) {
             connection.release();
             console.log('DB is Connected 10.30');
-        }
-        return
-    });
-};
-
-db_mysql.connection_local = () => {
-    db_mysql.pool_local = mysql.createPool(db_mysql.config_local);
-    db_mysql.pool_local.getConnection((err, connection) => {
-        if (err) {
-            console.log("err localhost", err.toString());
-        }
-        if (connection) {
-            connection.release();
-            console.log('DB is Connected localhost');
         }
         return
     });

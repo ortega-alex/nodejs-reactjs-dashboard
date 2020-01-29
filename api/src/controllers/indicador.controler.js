@@ -73,9 +73,9 @@ export async function getGestoresPorSuper(req, res) {
         if (!id_supervisor) return res.json({ err: true, msj: 'Falta informacion!' });
 
         var indicadores = [
-            { tipo: 'Q', titulo: 'Recuperación acumulada', total: 0, gestores: [] },
-            { tipo: 'Q', titulo: 'Generación de promesas', total: 0, gestores: [] },
-            { tipo: '', titulo: 'Controles del día', total: 0, gestores: [] }
+            { tipo: 'Q', titulo: 'Recuperación acumulada del mes', desc: 'Total del mes por equipo:', total: 0, gestores: [] },
+            { tipo: 'Q', titulo: 'Generación de promesas del mes', desc: 'Total del mes por equipo:', total: 0, gestores: [] },
+            { tipo: '', titulo: 'Controles del día', desc: 'Total por día del equipo:', total: 0, gestores: [] }
         ];
         
         var strQuery = ` SELECT a.id_usuario,

@@ -8,7 +8,7 @@ import Grupo from './pantallas/grupo.component';
 import Top from './pantallas/top.component';
 
 const logoOca = require('../../media/logo_oca.png');
-const _intervalo = 30000;
+const _intervalo = 60000;
 
 class Gestor extends Component {
     constructor(props) {
@@ -51,7 +51,10 @@ class Gestor extends Component {
                         <div className="col-4 logo-oca">
                             <img height="70" src={logoOca} />
                         </div>
-                        <div className="col-4 offset-4 logo-departamento">
+                        <div className="col-4 nombre-super">
+                            <p className="m-0 p-0 w-100 h1"><b>Super: {supervisor.primer_nombre + ' ' + supervisor.primer_apellido}</b></p>
+                        </div>
+                        <div className="col-4 logo-departamento">
                             <img height="90" src={Function.getLogoDepartamento(supervisor.id_cartera_depto)} alt="Sin Logo" />
                         </div>
                     </div>
@@ -68,7 +71,7 @@ class Gestor extends Component {
     handleView() {
         const { indicadores, top_primeros_3, top_ultimos_3 } = this.props;
         const { indicadores_intervalos, transicion, intervalo, vista_top } = this.state;
-        if (!indicadores_intervalos) {            
+        if (!indicadores_intervalos) {
             var _intervalos = {
                 transiciones: indicadores.length,
                 intervalos: []
@@ -76,7 +79,7 @@ class Gestor extends Component {
             indicadores.forEach((element, i) => {
                 _intervalos.intervalos[i] = Math.ceil(element.gestores.length / 3);
             });
-            console.log("entra", _intervalos);
+
             this.setState({
                 indicadores_intervalos: _intervalos, interval_transicion: setInterval(() => {
                     this.handleProgramarIntervalo()
@@ -90,13 +93,13 @@ class Gestor extends Component {
             <div>
                 <div className="row text-center">
                     {indicadores_intervalos && indicadores &&
-                        <div className="col-md-8 offset-md-2">
+                        <div className="col-md-12">
                             <p className="m-0 p-0 h1">
                                 {transicion < indicadores_intervalos.transiciones ?
                                     indicadores[transicion].titulo : ((vista_top == 0 ? "Top 3 " : "") + "recuperación por producto")}
                             </p>
                             {(transicion < indicadores_intervalos.transiciones) ?
-                                <p className="p-0 m-0 h1">Total: {indicadores[transicion].tipo} {Function.commaSeparateNumber(indicadores[transicion].total)}</p>
+                                <p className="p-0 m-0 h1">{indicadores[transicion].desc} {indicadores[transicion].tipo} {Function.commaSeparateNumber(indicadores[transicion].total)}</p>
                                 : <p className="p-0 m-0 h1">{vista_top == 0 ? 'Primeros ' : 'Ultimos '} lugares</p>
                             }
                             <br />

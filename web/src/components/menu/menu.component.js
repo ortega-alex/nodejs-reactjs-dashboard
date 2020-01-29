@@ -7,6 +7,7 @@ import { AsyncStorage } from 'AsyncStorage';
 import UserActions from '../../_actions/user.actions';
 import Indicador from '../indicador/indicador.component';
 import Message from '../msj/message.component';
+import Tema from '../configuracion/tema.component';
 
 class Menu extends Component {
 
@@ -67,12 +68,28 @@ class Menu extends Component {
                         </Link>
                     </MenuAntd.Item>
 
-                    <MenuAntd.Item key="/msj" className="float-right">
+                    <MenuAntd.Item key="/msj">
                         <Link to="/msj" onClick={() => { this.setState({ pathname: "/msj" }) }} style={{ color: color }}>
                             <Icon type="message" />
                             <span>Mensajeria</span>
                         </Link>
                     </MenuAntd.Item>
+
+                    <MenuAntd.SubMenu key="1"
+                        title={
+                            <span style={{ color: color }}>
+                                <Icon type="setting" />
+                                <span>Configuración</span>
+                            </span>
+                        }
+                    >
+                        <MenuAntd.Item key="/tema">
+                            <Link to="/tema" onClick={() => { this.setState({ pathname: "/tema" }) }} style={{ color: color }}>
+                                <Icon type="pie-chart" />
+                                <span>tema</span>
+                            </Link>
+                        </MenuAntd.Item>
+                    </MenuAntd.SubMenu>
 
                 </MenuAntd>
 
@@ -115,8 +132,9 @@ class Menu extends Component {
                     </div>
                 }
 
-                <Route path="/" exact component={Indicador}/>
+                <Route path="/" exact component={Indicador} />
                 <Route path="/msj" component={Message} />
+                <Route path="/tema" component={Tema} />
             </HashRouter>
         );
     }
@@ -133,14 +151,32 @@ class Menu extends Component {
 
     handleChangeComplete = (color, event) => {
         this.setState({ background: color.hex });
-        var menu = { color: this.state.color, background: color.hex };
-        AsyncStorage.setItem('menu_dashborad', JSON.stringify(menu));
+        AsyncStorage.getItem('menu_dashborad', (err, res) => {
+            if (!err && res && res != "undefined") {
+                var menu = JSON.parse(res);
+                menu.color = this.state.color;
+                menu.background = color.hex;
+                AsyncStorage.setItem('menu_dashborad', JSON.stringify(menu));
+            } else {
+                var menu = { color: this.state.color, background: color.hex };
+                AsyncStorage.setItem('menu_dashborad', JSON.stringify(menu));
+            }
+        });
     };
 
     handleChangeCompleteColor = (color, event) => {
         this.setState({ color: color.hex });
-        var menu = { background: this.state.background, color: color.hex };
-        AsyncStorage.setItem('menu_dashborad', JSON.stringify(menu));
+        AsyncStorage.getItem('menu_dashborad', (err, res) => {
+            if (!err && res && res != "undefined") {
+                var menu = JSON.parse(res);
+                menu.color = color.hex;
+                menu.background = this.state.background;
+                AsyncStorage.setItem('menu_dashborad', JSON.stringify(menu));
+            } else {
+                var menu = { background: this.state.background, color: color.hex };
+                AsyncStorage.setItem('menu_dashborad', JSON.stringify(menu));
+            }
+        });
     };
 }
 
