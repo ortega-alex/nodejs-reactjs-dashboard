@@ -4,7 +4,7 @@ import { ordenarArrDesc, ordenarArrAcs } from '../config/helper';
 
 export async function getSupervisores(req, res) {
     try {
-        strQuery = `SELECT SUM(a.id_usuario_supervisor) AS id_supervisor,
+        strQuery = `SELECT  a.id_usuario_supervisor AS id_supervisor,
                             SUM(a.generacion_diaria) as generacion, 
                             SUM(a.recuperacion_acumulada) AS recuperacion, 
                             b.dir_foto,
@@ -15,7 +15,7 @@ export async function getSupervisores(req, res) {
                     FROM proyector..proyector_diario_top10_supervisores a 
                     LEFT JOIN oca_sac..usuario_fotografia b ON a.id_usuario_supervisor = b.id_usuario
                     GROUP BY a.id_usuario_supervisor,  b.dir_foto`;
-        var result = await db_mssql.pool.request().query(strQuery);
+        var result = await db_mssql.pool.request().query(strQuery);   
         var indicadores = result.recordset;
 
         // WHERE a.id_puesto in(27, 33) 

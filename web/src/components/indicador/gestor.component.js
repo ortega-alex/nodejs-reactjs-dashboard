@@ -168,12 +168,10 @@ class Gestor extends Component {
 
     handleClearInterval() {
         clearInterval(this.state.interval_transicion);
-        clearInterval(this.state.interval_trinterval_consultansicion);
+        clearInterval(this.state.interval_consulta);
         this.setState({
             titulo: null,
             descripcion: null,
-            interval_transicion: null,
-            interval_consulta: null,
             indicadores_intervalos: undefined,
             transicion: 0,
             intervalo: 0,

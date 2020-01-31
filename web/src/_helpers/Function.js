@@ -1,5 +1,5 @@
 import { message as Message } from 'antd';
-const _URL_IMG = "http://apps.ocacall.oca/reclutador/arch/";
+const _URL_IMG = "http://apps.ocacall.oca/reclutador/arch/carne/recorte/"
 const arr_logos = { 
     4 : require('../media/promerica.png'),
     12 : require('../media/bi.png'),

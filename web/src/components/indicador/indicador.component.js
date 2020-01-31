@@ -9,6 +9,7 @@ import { Player } from 'video-react';
 import Supervisor from './supervisor.component';
 import Gestor from './gestor.component';
 import _server from '../../_services/server.services';
+import UsuarioActions from '../../_actions/user.actions';
 
 const socket = io(_server._url + _server._port);
 const _width = window.innerWidth;
@@ -40,6 +41,10 @@ class Indicador extends Component {
 
                 socket.on("todos", (res) => {
                     this.handleDrawer(res);
+                });
+
+                socket.on("autualizar-secion", () => {
+                    this.props.dispatch(UsuarioActions.loginUpdate(user));
                 });
             }
         });

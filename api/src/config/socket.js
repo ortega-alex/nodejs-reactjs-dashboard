@@ -15,5 +15,9 @@ module.exports = function (io, app) {
         socket.on('cambiar-tema', (values) => {
             io.emit('tema', values);
         });
+
+        socket.on('actualizar', () => {
+            io.emit('autualizar-secion');
+        });
     });
 }

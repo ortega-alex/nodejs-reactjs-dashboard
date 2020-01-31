@@ -26,7 +26,7 @@ class Top extends Component {
                             </div>
                             <div className="text-center" style={{ height: '19%' }}>
                                 <p className="m-0 p-0 w-100 h1">{item.nombres_super.split(' ')[0]} {item.apellidos_super.split(' ')[0]}</p>
-                                <p className="m-0 p-0 w-100 h1">{Function.remplazarEspacios_(item.producto)}</p>
+                                <p className="m-0 p-0 w-100 h1">{Function.remplazarEspacios_(item.producto.substr(0, 12))}</p>
                             </div>
                         </div>
                     )
