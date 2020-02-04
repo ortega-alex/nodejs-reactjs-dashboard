@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './components/App';
 
 // CSS
-import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
 import 'rodal/lib/rodal.css';
 import 'antd/dist/antd.css';

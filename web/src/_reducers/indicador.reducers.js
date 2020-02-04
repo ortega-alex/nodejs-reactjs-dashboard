@@ -23,7 +23,9 @@ export default function _indicador(state = {}, action) {
                 ...state,
                 indicadores: action.data.indicadores,
                 top_primeros_3: action.data.top_primeros_3,
-                top_ultimos_3: action.data.top_ultimos_3
+                top_ultimos_3: action.data.top_ultimos_3,
+                tiempo_transiciones: action.data.tiempo_transiciones,
+                total_transiciones: action.data.total_transiciones
             }
         default:
             return state

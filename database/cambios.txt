@@ -1,0 +1,9 @@
+/ titulos a una sola linea
+/ quitarle el # en las posiciones 
+/ quitar apellidos y dejar solo la primera inicial
+/ footer con color blanco con los logos
+/ quitar la palabra sub
+/ agrandar las letras e imagenes
+/ quitar las targetas
+* agregar animaciones antes de cada top por producto
+/ sumatoria por cliente en top 3 por producto

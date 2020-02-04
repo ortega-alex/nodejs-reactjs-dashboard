@@ -89,6 +89,12 @@ class Menu extends Component {
                                 <span>tema</span>
                             </Link>
                         </MenuAntd.Item>
+                        <MenuAntd.Item key="/tema">
+                            <Link to="/transicion" onClick={() => { this.setState({ pathname: "/transicion" }) }} style={{ color: color }}>
+                                <Icon type="pie-chart" />
+                                <span>Transiciones</span>
+                            </Link>
+                        </MenuAntd.Item>
                     </MenuAntd.SubMenu>
 
                 </MenuAntd>

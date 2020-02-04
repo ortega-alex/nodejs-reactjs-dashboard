@@ -12,11 +12,11 @@ class Target extends Component {
     render() {
         const { lugar, tipo, usuario, descripcion, total } = this.props;
         return (
-            <div className={`target ${Function.getFondo(lugar)}`} >
-                <div style={{ height: 155, width: '100%' }}>
+            <div className="text-center">
+                <div style={{ height: 225, width: '100%' }}>
                     <img
-                        height="155"
-                        width="155"
+                        height="225"
+                        width="225"
                         src={Function.getImage(usuario.foto)}
                         className="avatar"
                         alt="Sin Imagen"
@@ -26,7 +26,7 @@ class Target extends Component {
                     type="zoom-out"
                     className="icon-target"
                 />
-                <p className="m-0 p-0 w-100 h1">{usuario.nombres.split(' ')[0]} {usuario.apellidos.split(' ')[0]}</p>
+                <p className="m-0 p-0 w-100 h1">{usuario.nombres.split(' ')[0]} {usuario.apellidos.split(' ')[0].substr(0,1)}.</p>
                 {descripcion &&
                     <p className="m-0 p-0 w-100 h1 text-dark">{descripcion}</p>
                 }

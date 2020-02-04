@@ -15,7 +15,7 @@ export async function getSupervisores(req, res) {
                     FROM proyector..proyector_diario_top10_supervisores a 
                     LEFT JOIN oca_sac..usuario_fotografia b ON a.id_usuario_supervisor = b.id_usuario
                     GROUP BY a.id_usuario_supervisor,  b.dir_foto`;
-        var result = await db_mssql.pool.request().query(strQuery);   
+        var result = await db_mssql.pool.request().query(strQuery);
         var indicadores = result.recordset;
 
         // WHERE a.id_puesto in(27, 33) 
@@ -70,12 +70,14 @@ export async function getGestoresPorSuper(req, res) {
         if (!id_supervisor) return res.json({ err: true, msj: 'Falta informacion!' });
 
         var indicadores = [
-            { tipo: 'Q', titulo: 'Recuperación acumulada del mes', desc: 'Total del equipo:', total: 0, gestores: [] },
-            { tipo: 'Q', titulo: 'Generación de promesas del mes', desc: 'Total del equipo:', total: 0, gestores: [] },
-            { tipo: '', titulo: 'Controles del día', desc: 'Total del equipo:', total: 0, gestores: [] }
+            { tipo: 'Q', titulo: 'Recuperación', total: 0, gestores: [] },
+            { tipo: 'Q', titulo: 'Generación', total: 0, gestores: [] },
+            { tipo: '', titulo: 'Controles', total: 0, gestores: [] },
+            { tipo: '', titulo: 'Top 3 recuperación por producto.', gestores: [] },
+            { tipo: '', titulo: 'recuperación por producto ultimos lugares.', gestores: [] }
         ];
-        
-        var strQuery = ` SELECT a.id_usuario,
+
+        var strQuery = `SELECT a.id_usuario,
                                 SUM(a.generacion_diaria) AS generacion, 
                             (SELECT SUM(total_controles)
                             FROM proyector..proyector_diario_controles_x_hora
@@ -95,6 +97,7 @@ export async function getGestoresPorSuper(req, res) {
                         GROUP BY a.id_usuario, b.nombres, b.apellidos, b.nombre_completo, c.dir_foto`
         var result = await db_mssql.pool.request().query(strQuery);
         var arr = result.recordset;
+
         arr.forEach(element => {
             // recuperacion
             indicadores[0].gestores.push({
@@ -138,32 +141,30 @@ export async function getGestoresPorSuper(req, res) {
         ordenarArrDesc(indicadores[1].gestores, 'indicador');
         ordenarArrDesc(indicadores[2].gestores, 'indicador');
 
-        strQuery = `SELECT CASE 
-                            WHEN a.recuperacion_acumulada IS NULL THEN 0
-                            ELSE a.recuperacion_acumulada
-                        END AS indicador,
-                        b.id_usuario, b.nombres, b.apellidos,
+        strQuery = `SELECT 
+                        (SELECT SUM(x.recuperacion_acumulada)
+                            FROM proyector..proyector_diario_top10 x 
+                            WHERE x.id_usuario = a.id_usuario ) AS indicador,
+                        b.nombres, b.apellidos,
                         c.dir_foto AS foto,
-                        d.id_usuario AS id_supervisor, d.nombres AS nombres_super, d.apellidos AS apellidos_super,
-                        e.dir_foto AS foto_super,
-                        f.id_grupo_producto AS id_producto, f.grupo_producto AS producto
+                        d.nombres AS nombres_super, d.apellidos AS apellidos_super,
+                        e.grupo_producto AS producto
                     FROM proyector..proyector_diario_top10 a
                     INNER JOIN oca_sac..usuarios b ON a.id_usuario = b.id_usuario
                     LEFT JOIN oca_sac..usuario_fotografia c ON b.id_usuario = c.id_usuario
                     INNER JOIN oca_sac..usuarios d ON a.id_usuario_supervisor = d.id_usuario
-                    LEFT JOIN oca_sac..usuario_fotografia e ON d.id_usuario = e.id_usuario
-                    INNER JOIN proyector..proyector_diario_grupos_productos f ON a.id_grupo_producto = f.id_grupo_producto
+                    INNER JOIN proyector..proyector_diario_grupos_productos e ON a.id_grupo_producto = e.id_grupo_producto
                     WHERE a.id = (  SELECT top 1 c.id
                                     FROM proyector..proyector_diario_top10 c 
                                     WHERE a.id_usuario = c.id_usuario
-                                    order by ef_no_cuentas_actuales desc)
+                                    order by recuperacion_acumulada desc)
                     AND a.id_grupo_producto IN( SELECT id_grupo_producto
                                                 FROM proyector..proyector_diario_top10_supervisores
                                                 WHERE id_usuario_supervisor = ${id_supervisor})
                     ORDER BY indicador DESC`;
 
-        var result = await db_mssql.pool.request().query(strQuery);
-        var arr = result.recordset;
+        result = await db_mssql.pool.request().query(strQuery);
+        arr = result.recordset;
         var ultimos_3 = arr.length > 0 ? arr.length - 4 : 0;
         var top_primeros_3 = [];
         var top_ultimos_3 = [];
@@ -178,11 +179,22 @@ export async function getGestoresPorSuper(req, res) {
         });
 
         ordenarArrAcs(top_ultimos_3, 'indicador');
+
+
+        strQuery = `SELECT sg_lugar, sg_grupo, sg_top
+                    FROM proyector..transiciones_pantallas
+                    WHERE id_operacion = 1`;
+
+        result = await db_mssql.pool.request().query(strQuery);
+        var tiempo_transiciones = result.recordset[0];
+
         return res.status(200).json({
             message: 'success',
             indicadores,
             top_primeros_3,
-            top_ultimos_3
+            top_ultimos_3,
+            tiempo_transiciones,
+            total_transiciones: 4
         });
     } catch (err) {
         res.status(500).json({

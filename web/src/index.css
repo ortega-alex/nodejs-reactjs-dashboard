@@ -5,6 +5,14 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+.h1 {
+    font-size: 2.8rem;
+}
+
+.h2 {
+    font-size: 2.5rem;
+}
+
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
@@ -253,7 +261,7 @@ code {
     left: 10px;
 }
 
-.nombre-super{
+.nombre-super {
     position: absolute;
     text-align: center;
     bottom: 10px;
@@ -261,15 +269,66 @@ code {
     margin-left: 25%;
 }
 
-#sticky-footer {
+/* #sticky-footer {
     position: absolute;
-    bottom: 10px;
-    width: 100% !important;
-}
+    bottom: 14%;
+    right: 5%;
+    width: 94% !important;
+    border: solid black 1px;
+    background-color: white;
+} */
 
 .gestores {
     width: 100%;
     display: flex;
     direction: row;
     justify-content: center;
+}
+
+.footer {
+    border: solid black 0.5px;
+    background-color: white;
+}
+
+.animacion-top {
+    position: absolute;
+    width: 100%;
+    bottom: 10px;
+    text-align: center;
+    opacity: 0;
+}
+
+.animacion-top {
+    animation: imagen 10s;
+}
+
+@keyframes imagen {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.animacion-posicion {
+    opacity: 1;
+}
+
+.animacion-posicion {
+    animation: top 10s;
+}
+
+@keyframes top {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.posicion {
+    -webkit-text-stroke: 0.5px black;
+    color: #4bbbe8;
 }

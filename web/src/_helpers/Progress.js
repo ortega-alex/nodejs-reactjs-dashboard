@@ -36,8 +36,8 @@ class Progress extends Component {
                         <div
                             style={{
                                 height: '100%',
-                                width: `${gestor.meta && gestor.meta < 100 ? gestor.meta : 100}%`,
-                                backgroundColor: Function.colorPorcentaje(gestor.meta && gestor.meta < 100 ? gestor.meta : 100),
+                                width: `${gestor.meta && gestor.meta < 100 ? gestor.meta : 1}%`,
+                                backgroundColor: Function.colorPorcentaje(gestor.meta && gestor.meta < 100 ? gestor.meta : 1),
                             }}>
                         </div>
                     </div>
@@ -58,7 +58,7 @@ class Progress extends Component {
                     </div>
                     <div style={{ height: '20%', position: 'relative' }}>
                         <p
-                            className="m-0 p-0 h2"
+                            className="m-0 p-0 h1"
                             style={{
                                 position: 'absolute',
                                 bottom: 0,

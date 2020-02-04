@@ -8,18 +8,15 @@ import Grupo from './pantallas/grupo.component';
 import Top from './pantallas/top.component';
 
 const logoOca = require('../../media/logo_oca.png');
-const _intervalo = 60000;
 
 class Gestor extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            titulo: null,
-            descripcion: null,
-            interval_transicion: null,
             interval_consulta: null,
-            indicadores_intervalos: undefined,
+            interval_view: null,
             transicion: 0,
+            vista: 0,
             intervalo: 0,
             vista_top: 0
         };
@@ -28,6 +25,7 @@ class Gestor extends Component {
     componentDidMount() {
         this.handleGetIndicador();
         this.setState({ interval_consulta: setInterval(() => { this.handleGetIndicador() }, 1800000) });
+        this.handleInitiaclization();
     }
 
     componentWillUnmount() {
@@ -41,24 +39,26 @@ class Gestor extends Component {
             <div onClick={() => {
                 this.handleClearInterval();
                 this.props.changeView(1);
-            }}>
-                {indicadores && indicadores.length > 0 &&
-                    this.handleView()
-                }
-
-                <footer id="sticky-footer">
-                    <div className="row">
-                        <div className="col-4 logo-oca">
+            }} style={{ height: '100%' }}>
+                <div style={{ height: '75%' }}>
+                    {(indicadores && indicadores.length > 0) &&
+                        this.handleView()
+                    }
+                </div>
+                <div style={{ height: '15%' }} className="footer">
+                    <div className="row text-center">
+                        <div className="col-3">
                             <img height="70" src={logoOca} />
                         </div>
-                        <div className="col-4 nombre-super">
-                            <p className="m-0 p-0 w-100 h1"><b>Sup: {supervisor.primer_nombre + ' ' + supervisor.primer_apellido}</b></p>
+                        <div className="col-6">
+                            <br />
+                            <h1 className="m-0 p-0 w-100 h1">{supervisor.primer_nombre + ' ' + supervisor.primer_apellido}</h1>
                         </div>
-                        <div className="col-4 logo-departamento">
+                        <div className="col-3">
                             <img height="90" src={Function.getLogoDepartamento(supervisor.id_cartera_depto)} alt="Sin Logo" />
                         </div>
                     </div>
-                </footer>
+                </div>
             </div>
         );
     }
@@ -68,54 +68,43 @@ class Gestor extends Component {
         this.props.dispatch(IndicadorActions.getGestoresSupervisor(supervisor.id_usuario));
     }
 
-    handleView() {
-        const { indicadores, top_primeros_3, top_ultimos_3 } = this.props;
-        const { indicadores_intervalos, transicion, intervalo, vista_top } = this.state;
-        if (!indicadores_intervalos) {
-            var _intervalos = {
-                transiciones: indicadores.length,
-                intervalos: []
-            };
-            indicadores.forEach((element, i) => {
-                _intervalos.intervalos[i] = Math.ceil(element.gestores.length / 3);
-            });
+    handleInitiaclization() {
+        const { indicadores } = this.props;
+        this.setState({
+            interval_view: setTimeout(() => {
+                if (indicadores && indicadores.length > 0) {
+                    this.handleSetVista(0);
+                } else {
+                    this.handleInitiaclization();
+                }
+            }, 1000)
+        });
+    }
 
-            this.setState({
-                indicadores_intervalos: _intervalos, interval_transicion: setInterval(() => {
-                    this.handleProgramarIntervalo()
-                }, _intervalo)
-            }, () => {
-                this.handleProgramarIntervalo(0);
-            });
-        }
+    handleView() {
+        const { indicadores, top_primeros_3, top_ultimos_3, tiempo_transiciones, total_transiciones } = this.props;
+        const { transicion, vista, intervalo, vista_top } = this.state;
 
         return (
             <div>
                 <div className="row text-center">
-                    {indicadores_intervalos && indicadores &&
+                    {indicadores &&
                         <div className="col-md-12">
                             <p className="m-0 p-0 h1">
-                                {transicion < indicadores_intervalos.transiciones ?
-                                    indicadores[transicion].titulo : ((vista_top == 0 ? "Top 3 " : "") + "recuperación por producto")}
+                                {indicadores[transicion].titulo +
+                                    (indicadores[transicion].total ?
+                                        ': ' + indicadores[transicion].tipo + ' ' + Function.commaSeparateNumber(indicadores[transicion].total) : '')}
                             </p>
-                            {(transicion < indicadores_intervalos.transiciones) ?
-                                <p className="p-0 m-0 h1">{indicadores[transicion].desc} {indicadores[transicion].tipo} {Function.commaSeparateNumber(indicadores[transicion].total)}</p>
-                                : <p className="p-0 m-0 h1">{vista_top == 0 ? 'Primeros ' : 'Ultimos '} lugares</p>
-                            }
                             <br />
                         </div>
                     }
                 </div>
 
-                {(indicadores && indicadores.length > 0 &&
-                    intervalo == 0 && indicadores_intervalos &&
-                    transicion < indicadores_intervalos.transiciones) &&
+                {(vista == 0 && indicadores[transicion]) &&
                     <Posicion indicador={indicadores[transicion]} />
                 }
 
-                {(indicadores && indicadores.length > 0 &&
-                    intervalo > 0 && indicadores_intervalos &&
-                    transicion < indicadores_intervalos.transiciones) &&
+                {(vista == 1 && indicadores[transicion]) &&
                     <Grupo
                         gestores={this.handleGetGrupo(indicadores[transicion].gestores)}
                         tipo={indicadores[transicion].tipo}
@@ -123,33 +112,70 @@ class Gestor extends Component {
                     />
                 }
 
-                {(((top_primeros_3 && top_primeros_3.length > 0) || (top_ultimos_3 && top_ultimos_3.length > 0)) &&
-                    (indicadores_intervalos && transicion == indicadores_intervalos.transiciones)) &&
+                {vista == 2 &&
                     <Top top={vista_top == 0 ? top_primeros_3 : top_ultimos_3} lugar={vista_top == 0 ? 1 : 3} />
                 }
             </div>
-        )
+        );
     }
 
-    handleProgramarIntervalo(inicial = 1) {
-        const { indicadores_intervalos, transicion } = this.state;
-        var _transicion = inicial == 0 ? 0 : (transicion < indicadores_intervalos.transiciones ? _transicion = transicion + 1 : 0);
-        if (_transicion < indicadores_intervalos.transiciones) {
-            var cantidad = (indicadores_intervalos.intervalos[_transicion] + 1);
-            var _times = _intervalo / cantidad;
-            for (let index = 1; index < cantidad; index++) {
-                setTimeout(() => {
-                    const { intervalo } = this.state;
-                    this.setState({ intervalo: intervalo + 1 });
-                }, _times * index);
+    handleSetVista(vista) {
+        const { indicadores, tiempo_transiciones, total_transiciones } = this.props;
+        const { transicion } = this.state;
+        this.setState({ vista }, () => {
+
+            if (vista === 0) {
+                this.setState({
+                    interval_view: setTimeout(() => {
+                        this.handleSetVista(1);
+                    }, tiempo_transiciones.sg_lugar * 1000)
+                });
             }
-        } else {
-            var _times = _intervalo / 2;
-            setTimeout(() => {
-                this.setState({ vista_top: 1 });
-            }, _times);
-        }
-        this.setState({ transicion: _transicion, intervalo: 0 });
+
+            if (vista === 1) {
+                var cantidad = Math.ceil(indicadores[transicion].gestores.length / 3);
+                var _times = (tiempo_transiciones.sg_grupo * 1000) / cantidad;
+                for (let index = 1; index <= cantidad; index++) {
+                    this.setState({
+                        interval_view: setTimeout(() => {
+                            const { intervalo } = this.state;                           
+                            this.setState({ intervalo: intervalo + 1 });
+                            if (index === cantidad) {
+                                this.setState({
+                                    interval_view: setTimeout(() => {
+                                        if (transicion < (total_transiciones - 2)) {
+                                            this.setState({ transicion: transicion + 1, intervalo: 0 }, () => {
+                                                this.handleSetVista(0);
+                                            });
+                                        } else {
+                                            this.setState({ transicion: transicion + 1, intervalo: 0 }, () => {
+                                                this.handleSetVista(2);
+                                            });
+                                        }
+                                    }, _times)
+                                });
+                            }
+                        }, _times * index)
+                    });
+                }
+            }
+
+            if (vista === 2) {
+                var _times = (tiempo_transiciones.sg_top * 1000) / 2;
+                this.setState({
+                    interval_view: setTimeout(() => {
+                        this.setState({ transicion: transicion + 1, vista_top: 1 });
+                        this.setState({
+                            interval_view: setTimeout(() => {
+                                this.setState({ transicion: 0, intervalo: 0, vista_top: 0 }, () => {
+                                    this.handleSetVista(0);
+                                });
+                            }, _times)
+                        });
+                    }, _times)
+                });
+            }
+        });
     }
 
     handleGetGrupo(gestores) {
@@ -167,13 +193,13 @@ class Gestor extends Component {
     }
 
     handleClearInterval() {
-        clearInterval(this.state.interval_transicion);
         clearInterval(this.state.interval_consulta);
+        clearInterval(this.state.interval_view);
         this.setState({
-            titulo: null,
-            descripcion: null,
-            indicadores_intervalos: undefined,
+            interval_consulta: null,
+            interval_view: null,
             transicion: 0,
+            vista: 0,
             intervalo: 0,
             vista_top: 0
         });
@@ -182,8 +208,8 @@ class Gestor extends Component {
 
 function mapStateToProps(state) {
     const { _indicador } = state;
-    const { indicadores, top_primeros_3, top_ultimos_3 } = _indicador;
-    return { indicadores, top_primeros_3, top_ultimos_3 };
+    const { indicadores, top_primeros_3, top_ultimos_3, tiempo_transiciones, total_transiciones } = _indicador;
+    return { indicadores, top_primeros_3, top_ultimos_3, tiempo_transiciones, total_transiciones };
 }
 
 export default connect(mapStateToProps)(Gestor);

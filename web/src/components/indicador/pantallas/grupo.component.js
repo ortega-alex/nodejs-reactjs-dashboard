@@ -17,29 +17,26 @@ class Grupo extends Component {
                 {gestores && gestores.map((res, i) => {
                     return (
                         <div key={i} className="indicadores-gestores pt-1" >
-                            <div style={{ height: 170, width: '100%' }}>
+                            <div style={{ height: 240, width: '100%' }}>
                                 <ProgressAntd
                                     type="circle"
                                     strokeColor={res.meta ? Function.colorPorcentaje(res.meta) : ''}
                                     percent={res.meta ? parseInt(res.meta) : 0}
                                     format={() =>
                                         <img
-                                            height="155"
-                                            width="155"
-                                            src={Function.getImage(res.foto)}
+                                            height="225"
+                                            width="225"
+                                            src={res.foto ? Function.getImage(res.foto) : ''}
                                             className="avatar"
                                             alt="Sin Imagen"
                                         />
                                     }
-                                    width={170}
+                                    width={240}
                                     showInfo={true}
                                 />
                             </div>
                             <p className="m-0 p-0 h1">
-                                <b> #{i + intervalo} {res.nombres.split(' ')[0]}</b>
-                            </p>
-                            <p className="m-0 p-0 h1">
-                                <b> {res.apellidos.split(' ')[0]}</b>
+                                <b> {i + intervalo} {res.nombres.split(' ')[0]} {res.apellidos.split(' ')[0].substr(0, 1)}.</b>
                             </p>
                             <div
                                 style={{
