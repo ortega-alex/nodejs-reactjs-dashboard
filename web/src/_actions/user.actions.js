@@ -56,6 +56,21 @@ function loginUpdate(data) {
     }
 }
 
+function loginAsignacion(data) {
+    return dispatch => {
+        dispatch(request());
+        http._POST("user/asignacion", data).then(res => {
+            if (res.err == false) {
+                AsyncStorage.setItem('login_dashboard', JSON.stringify(res.user)).then(() => {
+                    window.location.reload();
+                });
+            }
+        }).catch(err => {
+            dispatch(failure(err));
+        });
+    }
+}
+
 
 function logout() {
     AsyncStorage.setItem('login_dashboard', undefined).then(() => {
@@ -68,7 +83,8 @@ const UsuarioActions = {
     login,
     changePass,
     logout,
-    loginUpdate
+    loginUpdate,
+    loginAsignacion
 };
 
 export default UsuarioActions;

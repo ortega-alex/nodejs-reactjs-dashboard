@@ -299,7 +299,7 @@ code {
 }
 
 .animacion-top {
-    animation: imagen 10s;
+    animation: imagen 5s;
 }
 
 @keyframes imagen {
@@ -316,7 +316,7 @@ code {
 }
 
 .animacion-posicion {
-    animation: top 10s;
+    animation: top 5s;
 }
 
 @keyframes top {

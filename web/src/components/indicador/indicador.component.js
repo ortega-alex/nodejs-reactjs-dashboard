@@ -34,10 +34,17 @@ class Indicador extends Component {
             if (!err && res && res != "undefined") {
                 const user = JSON.parse(res);
                 this.setState({ user }, () => this.handleGetIndicadores());
+                if (user.id_usuario != undefined) {
+                    socket.on(user.id_usuario.toString(), (res) => {
+                        this.handleDrawer(res);
+                    });
+                }
 
-                socket.on(user.id_usuario.toString(), (res) => {
-                    this.handleDrawer(res);
-                });
+                if (user.id_tv != undefined) {
+                    socket.on(user.id_tv.toString(), (res) => {
+                        this.props.dispatch(UsuarioActions.loginAsignacion(res));
+                    });
+                }
 
                 socket.on("todos", (res) => {
                     this.handleDrawer(res);

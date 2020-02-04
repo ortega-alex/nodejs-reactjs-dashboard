@@ -37,8 +37,10 @@ class Gestor extends Component {
         const { indicadores } = this.props;
         return (
             <div onClick={() => {
-                this.handleClearInterval();
-                this.props.changeView(1);
+                if (!supervisor.cargo || supervisor.cargo != 0) {
+                    this.handleClearInterval();
+                    this.props.changeView(1);
+                }
             }} style={{ height: '100%' }}>
                 <div style={{ height: '75%' }}>
                     {(indicadores && indicadores.length > 0) &&
@@ -138,7 +140,7 @@ class Gestor extends Component {
                 for (let index = 1; index <= cantidad; index++) {
                     this.setState({
                         interval_view: setTimeout(() => {
-                            const { intervalo } = this.state;                           
+                            const { intervalo } = this.state;
                             this.setState({ intervalo: intervalo + 1 });
                             if (index === cantidad) {
                                 this.setState({

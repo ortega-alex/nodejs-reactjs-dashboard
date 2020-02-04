@@ -19,5 +19,9 @@ module.exports = function (io, app) {
         socket.on('actualizar', () => {
             io.emit('autualizar-secion');
         });
+
+        socket.on('asignacion-usuario', (values) => {
+            io.emit(values.id_tv, values);
+        });
     });
 }

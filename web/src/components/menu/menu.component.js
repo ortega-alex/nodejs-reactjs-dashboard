@@ -8,6 +8,8 @@ import UserActions from '../../_actions/user.actions';
 import Indicador from '../indicador/indicador.component';
 import Message from '../msj/message.component';
 import Tema from '../configuracion/tema.component';
+import Transicion from '../configuracion/transicion.component';
+import Asignacion from '../configuracion/asignacion.component';
 
 class Menu extends Component {
 
@@ -68,34 +70,44 @@ class Menu extends Component {
                         </Link>
                     </MenuAntd.Item>
 
-                    <MenuAntd.Item key="/msj">
-                        <Link to="/msj" onClick={() => { this.setState({ pathname: "/msj" }) }} style={{ color: color }}>
-                            <Icon type="message" />
-                            <span>Mensajeria</span>
-                        </Link>
-                    </MenuAntd.Item>
+                    {user.cargo == 1 &&
+                        <MenuAntd.Item key="/msj">
+                            <Link to="/msj" onClick={() => { this.setState({ pathname: "/msj" }) }} style={{ color: color }}>
+                                <Icon type="message" />
+                                <span>Mensajeria</span>
+                            </Link>
+                        </MenuAntd.Item>
+                    }
 
-                    <MenuAntd.SubMenu key="1"
-                        title={
-                            <span style={{ color: color }}>
-                                <Icon type="setting" />
-                                <span>Configuración</span>
-                            </span>
-                        }
-                    >
-                        <MenuAntd.Item key="/tema">
-                            <Link to="/tema" onClick={() => { this.setState({ pathname: "/tema" }) }} style={{ color: color }}>
-                                <Icon type="pie-chart" />
-                                <span>tema</span>
-                            </Link>
-                        </MenuAntd.Item>
-                        <MenuAntd.Item key="/tema">
-                            <Link to="/transicion" onClick={() => { this.setState({ pathname: "/transicion" }) }} style={{ color: color }}>
-                                <Icon type="pie-chart" />
-                                <span>Transiciones</span>
-                            </Link>
-                        </MenuAntd.Item>
-                    </MenuAntd.SubMenu>
+                    {user.cargo == 1 &&
+                        <MenuAntd.SubMenu key="1"
+                            title={
+                                <span style={{ color: color }}>
+                                    <Icon type="setting" />
+                                    <span>Configuración</span>
+                                </span>
+                            }
+                        >
+                            <MenuAntd.Item key="/asignacion">
+                                <Link to="/asignacion" onClick={() => { this.setState({ pathname: "/asignacion" }) }} style={{ color: color }}>
+                                    <Icon type="picture" />
+                                    <span>Asignación</span>
+                                </Link>
+                            </MenuAntd.Item>
+                            <MenuAntd.Item key="/tema">
+                                <Link to="/tema" onClick={() => { this.setState({ pathname: "/tema" }) }} style={{ color: color }}>
+                                    <Icon type="picture" />
+                                    <span>Tema</span>
+                                </Link>
+                            </MenuAntd.Item>
+                            <MenuAntd.Item key="/transicion">
+                                <Link to="/transicion" onClick={() => { this.setState({ pathname: "/transicion" }) }} style={{ color: color }}>
+                                    <Icon type="clock-circle" />
+                                    <span>Transiciones</span>
+                                </Link>
+                            </MenuAntd.Item>
+                        </MenuAntd.SubMenu>
+                    }
 
                 </MenuAntd>
 
@@ -139,8 +151,10 @@ class Menu extends Component {
                 }
 
                 <Route path="/" exact component={Indicador} />
-                <Route path="/msj" component={Message} />
-                <Route path="/tema" component={Tema} />
+                {user.cargo == 1 && <Route path="/msj" component={Message} />}
+                {user.cargo == 1 && <Route path="/tema" component={Tema} />}
+                {user.cargo == 1 && <Route path="/transicion" component={Transicion} />}
+                {user.cargo == 1 && <Route path="/asignacion" component={Asignacion} />}
             </HashRouter>
         );
     }

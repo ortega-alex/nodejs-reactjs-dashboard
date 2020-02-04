@@ -163,18 +163,7 @@ class Tema extends Component {
                                     </Button>
                                 </div>
                             </div>
-                            {(id_usuario && id_usuario == 2490) &&
-                                <div className="row">
-                                    <div className="col-md-4 offset-md-4">
-                                        <br />
-                                        <Button type="danger" block disabled={subiendo} onClick={this.handleUpdateSession.bind(this)}>
-                                            actualizar sesion
-                                        </Button>
-                                    </div>
-                                </div>
-                            }
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -204,10 +193,6 @@ class Tema extends Component {
         };
         socket.emit('cambiar-tema', data);
         this.setState({ tema: undefined, color_tema: 'black' })
-    }
-
-    handleUpdateSession() {
-        socket.emit('actualizar');
     }
 }
 
