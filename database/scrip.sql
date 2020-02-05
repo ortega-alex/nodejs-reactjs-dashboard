@@ -1,3 +1,8 @@
+--*************************************************************************--
+-- TIEMPO DE TRANSICIONES POR LUGAR, GRUPO Y TOP 3 DETERMINADO POR SEGUNDOS--
+-- MARLON ORTEGA --
+--*************************************************************************--
+
 CREATE TABLE proyector.dbo.transiciones_pantallas (
 	id_transiciones_pantallas int IDENTITY(0,1) NOT NULL,
 	ip_operacion int NOT NULL,
@@ -7,3 +12,5 @@ CREATE TABLE proyector.dbo.transiciones_pantallas (
     id_usuario int NOT NULL,
     fecha_creacion datetime DEFAULT getdate() NULL
 ) GO;
+
+--**************************************************************************--
