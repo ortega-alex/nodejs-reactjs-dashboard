@@ -293,13 +293,13 @@ code {
 .animacion-top {
     position: absolute;
     width: 100%;
-    bottom: 10px;
+    bottom: 0px;
     text-align: center;
     opacity: 0;
 }
 
 .animacion-top {
-    animation: imagen 5s;
+    animation: imagen 8s;
 }
 
 @keyframes imagen {
@@ -316,7 +316,7 @@ code {
 }
 
 .animacion-posicion {
-    animation: top 5s;
+    animation: top 8s;
 }
 
 @keyframes top {

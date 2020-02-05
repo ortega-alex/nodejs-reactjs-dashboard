@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 
 import Function from '../../../_helpers/Function';
-const _top = require('../../../media/top.gif');
+import Confetti from 'react-confetti'
+
+const _artificiales = require('../../../media/artif.gif');
+const _top = require('../../../media/aplausos.gif');
 
 class Top extends Component {
 
@@ -25,9 +28,24 @@ class Top extends Component {
                     )
                 })}
 
-                <div className="animacion-top">
-                    <img src={lugar != 3 ? _top : ''} height="400" />
-                </div>
+                {lugar != 3 &&
+                    <div className="animacion-top">
+                        <Confetti
+                            width={1000}
+                        />
+                        <div className="row">
+                            <div className="col-3">
+                                <img src={_artificiales} />
+                            </div>
+                            <div className="col-6">
+                                <img src={_top} />
+                            </div>
+                            <div className="col-3">
+                                <img src={_artificiales} />
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
         );
     }
