@@ -41,6 +41,7 @@ class Indicador extends Component {
                 }
 
                 if (user.id_tv != undefined) {
+
                     socket.on(user.id_tv.toString(), (res) => {
                         this.props.dispatch(UsuarioActions.loginAsignacion(res));
                     });

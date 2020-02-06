@@ -18,7 +18,8 @@ class Gestor extends Component {
             transicion: 0,
             vista: 0,
             intervalo: 0,
-            vista_top: 0
+            vista_top: 0,
+            android: false
         };
     }
 
@@ -26,6 +27,10 @@ class Gestor extends Component {
         this.handleGetIndicador();
         this.setState({ interval_consulta: setInterval(() => { this.handleGetIndicador() }, 1800000) });
         this.handleInitiaclization();
+        const _navegador = navigator.userAgent;
+        if (_navegador.indexOf('Chrome') > 0 && _navegador.indexOf('Android') > 0) {
+            this.setState({ android: true });
+        }
     }
 
     componentWillUnmount() {
@@ -33,8 +38,9 @@ class Gestor extends Component {
     }
 
     render() {
-        const { supervisor } = this.props;
-        const { indicadores } = this.props;
+        const { supervisor, indicadores } = this.props;
+        const { android } = this.state;
+
         return (
             <div onClick={() => {
                 if (!supervisor.cargo || supervisor.cargo != 0) {
@@ -42,12 +48,12 @@ class Gestor extends Component {
                     this.props.changeView(1);
                 }
             }} style={{ height: '100%' }}>
-                <div style={{ height: '75%' }}>
+                <div style={{ height: android ? '75%' : '85%' }}>
                     {(indicadores && indicadores.length > 0) &&
                         this.handleView()
                     }
                 </div>
-                <div style={{ height: '15%' }} className="footer">
+                <div style={{ height: '13%' }} className="footer">
                     <div className="row text-center">
                         <div className="col-3">
                             <img height="70" src={logoOca} />

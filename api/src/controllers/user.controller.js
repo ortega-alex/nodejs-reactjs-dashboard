@@ -111,7 +111,7 @@ export async function update_session(req, res) {
 export async function loginAsignacion(req, res) {
     try {
         const { id_usuario, id_tv } = req.body;
-        if (!id_usuario || !id_tv) return res.json({ err: true, message: "television y usuario requerido" });
+        if (!id_usuario || id_tv < 0) return res.json({ err: true, message: "television y usuario requerido" });
 
         var strQuery = `SELECT id_usuario, nombre_completo AS nombre, nombres, apellidos
                         FROM oca_sac..usuarios

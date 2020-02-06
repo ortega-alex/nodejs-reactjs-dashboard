@@ -51,18 +51,22 @@ export async function uploadImg(req, res) {
             const name = files.file.name; // uuid() + extencion;
             await files.file.mv(ruta + name, (err) => {
                 if (err) return res.status(500).json(err);
+                jimp.read(ruta + name).then((img) => {  
+                    img.resize(1080, jimp.AUTO).writeAsync(ruta + name);
+                    res.status(200).json({
+                        status: 'done',
+                        url: 'http://localhost:8080/' + name,
+                        name
+                    });
+                }).catch(err => {
+                    console.log('err jimp', err, files.file);
+                    res.status(200).json({
+                        status: 'done',
+                        url: 'http://localhost:8080/' + name,
+                        name
+                    });
+                });
             });
-
-            const image = await jimp.read(ruta + name);
-            await image.resize(1920, jimp.AUTO);
-            await image.writeAsync(ruta + name);
-
-            return res.status(200).json({
-                status: 'done',
-                url: 'http://localhost:8080/' + name,
-                name
-            });
-
         }
     } catch (err) {
         res.status(500).json({

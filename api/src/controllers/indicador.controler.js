@@ -5,7 +5,13 @@ import { ordenarArrDesc, ordenarArrAcs } from '../config/helper';
 export async function getSupervisores(req, res) {
     try {
         strQuery = `SELECT  a.id_usuario_supervisor AS id_supervisor,
-                            SUM(a.generacion_diaria) as generacion, 
+                            (	SELECT SUM(b.monto_programado_mes)
+                                FROM proyector..proyector_diario_generacion_x_hora b
+                                WHERE b.id_usuario_supervisor = a.id_usuario_supervisor
+                                AND b.id in(	SELECT TOP 1 id 
+                                                FROM proyector..proyector_diario_generacion_x_hora
+                                                WHERE id_usuario = b.id_usuario
+                                                ORDER BY hora DESC)) AS generacion, 
                             SUM(a.recuperacion_acumulada) AS recuperacion, 
                             b.dir_foto,
                             (	SELECT top 1 Meta_Mensual 
@@ -74,15 +80,18 @@ export async function getGestoresPorSuper(req, res) {
             { tipo: 'Q', titulo: 'Generación', total: 0, gestores: [] },
             { tipo: '', titulo: 'Controles', total: 0, gestores: [] },
             { tipo: '', titulo: 'Top 3 recuperación por producto.', gestores: [] },
-            { tipo: '', titulo: 'recuperación por producto ultimos lugares.', gestores: [] }
+            { tipo: '', titulo: 'Recuperación por producto ultimos lugares.', gestores: [] }
         ];
 
         var strQuery = `SELECT a.id_usuario,
-                                SUM(a.generacion_diaria) AS generacion, 
-                            (SELECT SUM(total_controles)
-                            FROM proyector..proyector_diario_controles_x_hora
-                            WHERE id_usuario = a.id_usuario
-                            GROUP BY id_usuario) AS controles,
+                            (	SELECT TOP 1 monto_programado_mes 
+                                FROM proyector..proyector_diario_generacion_x_hora
+                                WHERE id_usuario = a.id_usuario
+                                ORDER BY hora DESC) AS generacion, 
+                            (   SELECT SUM(total_controles)
+                                FROM proyector..proyector_diario_controles_x_hora
+                                WHERE id_usuario = a.id_usuario
+                                GROUP BY id_usuario) AS controles,
                             SUM(a.recuperacion_acumulada) AS recuperacion, 
                             b.nombres, b.apellidos, b.nombre_completo,
                             c.dir_foto AS foto,
@@ -117,7 +126,7 @@ export async function getGestoresPorSuper(req, res) {
                 apellidos: element.apellidos,
                 nombre_completo: element.nombre_completo,
                 foto: element.foto,
-                indicador: Math.round(parseFloat(element.generacion)),
+                indicador: isNaN(parseFloat(element.generacion)) ? 0 : Math.round(parseFloat(element.generacion)),
                 meta: element.meta > 0 ? (element.generacion * 100) / element.meta : 0
             });
 
@@ -133,7 +142,7 @@ export async function getGestoresPorSuper(req, res) {
             });
 
             indicadores[0].total += Math.round(parseFloat(element.recuperacion));
-            indicadores[1].total += Math.round(parseFloat(element.generacion));
+            indicadores[1].total += isNaN(parseFloat(element.generacion)) ? 0 : Math.round(parseFloat(element.generacion));
             indicadores[2].total += (element.controles && element.controles != '' && element.controles != null) ? parseInt(element.controles) : 0;
         });
 
