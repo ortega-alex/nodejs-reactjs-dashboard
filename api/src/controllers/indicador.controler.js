@@ -1,17 +1,18 @@
 import db_mysql from '../config/db_mysql';
 import db_mssql from '../config/db_mssql';
 import { ordenarArrDesc, ordenarArrAcs } from '../config/helper';
+const moment = require('moment');
+require("moment/min/locales.min");
+moment.locale('es');
 
 export async function getSupervisores(req, res) {
     try {
+        const hora = moment().format('HH');
         strQuery = `SELECT  a.id_usuario_supervisor AS id_supervisor,
                             (	SELECT SUM(b.monto_programado_mes)
                                 FROM proyector..proyector_diario_generacion_x_hora b
                                 WHERE b.id_usuario_supervisor = a.id_usuario_supervisor
-                                AND b.id in(	SELECT TOP 1 id 
-                                                FROM proyector..proyector_diario_generacion_x_hora
-                                                WHERE id_usuario = b.id_usuario
-                                                ORDER BY hora DESC)) AS generacion, 
+                                AND hora = ${hora}) AS generacion, 
                             SUM(a.recuperacion_acumulada) AS recuperacion, 
                             b.dir_foto,
                             (	SELECT top 1 Meta_Mensual 
@@ -24,7 +25,6 @@ export async function getSupervisores(req, res) {
         var result = await db_mssql.pool.request().query(strQuery);
         var indicadores = result.recordset;
 
-        // WHERE a.id_puesto in(27, 33) 
         var strQuery = `SELECT a.primer_nombre, a.primer_apellido, a.nombre_completo, a.id_usuario_sac AS id_supervisor, 
                                 b.id_cartera_depto, b.descripcion AS departamento
                         FROM reclutador.usuarios a
@@ -73,6 +73,8 @@ export async function getSupervisores(req, res) {
 export async function getGestoresPorSuper(req, res) {
     try {
         const { id_supervisor } = req.params;
+        const hora = moment().format('HH');
+        console.log(hora);
         if (!id_supervisor) return res.json({ err: true, msj: 'Falta informacion!' });
 
         var indicadores = [
@@ -84,10 +86,10 @@ export async function getGestoresPorSuper(req, res) {
         ];
 
         var strQuery = `SELECT a.id_usuario,
-                            (	SELECT TOP 1 monto_programado_mes 
+                            (	SELECT SUM(monto_programado_mes) 
                                 FROM proyector..proyector_diario_generacion_x_hora
                                 WHERE id_usuario = a.id_usuario
-                                ORDER BY hora DESC) AS generacion, 
+                                AND hora = ${hora}) AS generacion, 
                             (   SELECT SUM(total_controles)
                                 FROM proyector..proyector_diario_controles_x_hora
                                 WHERE id_usuario = a.id_usuario
@@ -103,7 +105,7 @@ export async function getGestoresPorSuper(req, res) {
                         INNER JOIN oca_sac..usuarios b ON a.id_usuario = b.id_usuario
                         LEFT JOIN oca_sac..usuario_fotografia c ON b.id_usuario = c.id_usuario
                         WHERE  a.id_usuario_supervisor = ${id_supervisor}
-                        GROUP BY a.id_usuario, b.nombres, b.apellidos, b.nombre_completo, c.dir_foto`
+                        GROUP BY a.id_usuario, b.nombres, b.apellidos, b.nombre_completo, c.dir_foto`;
         var result = await db_mssql.pool.request().query(strQuery);
         var arr = result.recordset;
 
@@ -151,7 +153,7 @@ export async function getGestoresPorSuper(req, res) {
         ordenarArrDesc(indicadores[2].gestores, 'indicador');
 
         strQuery = `SELECT 
-                        (SELECT SUM(x.recuperacion_acumulada)
+                        (   SELECT SUM(x.recuperacion_acumulada)
                             FROM proyector..proyector_diario_top10 x 
                             WHERE x.id_usuario = a.id_usuario ) AS indicador,
                         b.nombres, b.apellidos,
