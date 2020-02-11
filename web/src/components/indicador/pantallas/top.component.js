@@ -51,13 +51,14 @@ class Top extends Component {
     }
 
     hangleTarjeta(i, usuario, tipo) {
+        const { cookie } = this.props;
         return (
             <div className="text-center">
                 <div style={{ height: 225, width: '100%' }}>
                     <img
                         height="225"
                         width="225"
-                        src={Function.getImage(usuario.foto)}
+                        src={Function.getImage(usuario.foto, cookie)}
                         className="avatar"
                         alt="Sin Imagen"
                     />

@@ -74,7 +74,6 @@ export async function getGestoresPorSuper(req, res) {
     try {
         const { id_supervisor } = req.params;
         const hora = moment().format('HH');
-        console.log(hora);
         if (!id_supervisor) return res.json({ err: true, msj: 'Falta informacion!' });
 
         var indicadores = [

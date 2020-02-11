@@ -46,6 +46,19 @@ function loginUpdate(data) {
         dispatch(request());
         http._POST("user/update", data).then(res => {
             if (res.err == false) {
+                if (res.cookie) {
+                    AsyncStorage.getItem('menu_dashborad', (err, item) => {
+                        if (!err && item && item != "undefined") {
+                            var menu = JSON.parse(item);
+                            menu.cookie = res.cookie;
+                            AsyncStorage.setItem('menu_dashborad', JSON.stringify(menu));
+                        } else {
+                            var menu = { cookie: res.cookie };
+                            AsyncStorage.setItem('menu_dashborad', JSON.stringify(menu));
+                        }
+                    });
+                }
+
                 AsyncStorage.setItem('login_dashboard', JSON.stringify(res.user)).then(() => {
                     window.location.reload();
                 });

@@ -11,7 +11,7 @@ class Grupo extends Component {
     }
 
     render() {
-        const { gestores, tipo, intervalo } = this.props;
+        const { gestores, tipo, intervalo, cookie } = this.props;
         return (
             <div className="gestores">
                 {gestores && gestores.map((res, i) => {
@@ -26,7 +26,7 @@ class Grupo extends Component {
                                         <img
                                             height="225"
                                             width="225"
-                                            src={res.foto ? Function.getImage(res.foto) : ''}
+                                            src={res.foto ? Function.getImage(res.foto, cookie) : ''}
                                             className="avatar"
                                             alt="Sin Imagen"
                                         />

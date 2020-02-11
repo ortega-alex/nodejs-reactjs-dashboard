@@ -93,10 +93,12 @@ export async function update_session(req, res) {
             user.departamento = _res[0].descripcion;
             user.primer_nombre = user.nombres.split(' ')[0];
             user.primer_apellido = user.apellidos.split(' ')[0];
+            var cookie = new Date().getTime();
             res.status(200).json({
                 err: false,
                 msj: "Actualizacion de datos realizada exitosamente",
-                user
+                user,
+                cookie
             });
         });
     } catch (err) {

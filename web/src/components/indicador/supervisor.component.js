@@ -8,8 +8,6 @@ import Function from '../../_helpers/Function';
 class Supervisor extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-        };
     }
 
     componentDidMount() {
@@ -17,12 +15,9 @@ class Supervisor extends Component {
     }
 
     render() {
-        const { supervisores } = this.props;
+        const { supervisores, cookie } = this.props;
         return (
             <div>
-                {/* <div className="row">
-                    Menu
-                </div> */}
                 <div className="row" style={{ overflowY: 'auto' }}>
                     {supervisores && supervisores.map((res, i) => {
                         return (
@@ -31,7 +26,7 @@ class Supervisor extends Component {
                                     <img
                                         height="120"
                                         width="120"
-                                        src={Function.getImage(res.foto)}
+                                        src={Function.getImage(res.foto, cookie)}
                                         className="avatar"
                                         alt="Sin Imagen"
                                         onClick={() => this.props.changeView(0, res)}

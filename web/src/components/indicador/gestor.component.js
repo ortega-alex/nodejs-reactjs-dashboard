@@ -90,7 +90,7 @@ class Gestor extends Component {
     }
 
     handleView() {
-        const { indicadores, top_primeros_3, top_ultimos_3, tiempo_transiciones, total_transiciones } = this.props;
+        const { indicadores, top_primeros_3, top_ultimos_3, cookie } = this.props;
         const { transicion, vista, intervalo, vista_top } = this.state;
 
         return (
@@ -109,7 +109,10 @@ class Gestor extends Component {
                 </div>
 
                 {(vista == 0 && indicadores[transicion]) &&
-                    <Posicion indicador={indicadores[transicion]} />
+                    <Posicion
+                        indicador={indicadores[transicion]}
+                        cookie={cookie}
+                    />
                 }
 
                 {(vista == 1 && indicadores[transicion]) &&
@@ -117,11 +120,15 @@ class Gestor extends Component {
                         gestores={this.handleGetGrupo(indicadores[transicion].gestores)}
                         tipo={indicadores[transicion].tipo}
                         intervalo={intervalo > 1 ? (((intervalo - 1) * 3) + 1) : 1}
+                        cookie={cookie}
                     />
                 }
 
                 {vista == 2 &&
-                    <Top top={vista_top == 0 ? top_primeros_3 : top_ultimos_3} lugar={vista_top == 0 ? 1 : 3} />
+                    <Top
+                        top={vista_top == 0 ? top_primeros_3 : top_ultimos_3} lugar={vista_top == 0 ? 1 : 3}
+                        cookie={cookie}
+                    />
                 }
             </div>
         );

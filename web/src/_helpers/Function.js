@@ -20,10 +20,10 @@ function remplazarEspacios_(val) {
     return val.replace(/_/g, ' ');
 }
 
-function getImage(name) {
+function getImage(name, cookie) {
     var _name = decodeURIComponent(escape(name));
     // var path = remplazarEspacios_(name.trim());
-    return _URL_IMG + _name;//+ ".jpg";
+    return _URL_IMG + _name + '?' + cookie;//+ ".jpg";
 }
 
 function getFondo(id_dep) {

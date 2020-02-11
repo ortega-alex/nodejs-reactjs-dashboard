@@ -90,7 +90,7 @@ class Menu extends Component {
                         >
                             <MenuAntd.Item key="/asignacion">
                                 <Link to="/asignacion" onClick={() => { this.setState({ pathname: "/asignacion" }) }} style={{ color: color }}>
-                                    <Icon type="picture" />
+                                    <Icon type="windows" />
                                     <span>Asignación</span>
                                 </Link>
                             </MenuAntd.Item>

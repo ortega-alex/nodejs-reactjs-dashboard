@@ -25,7 +25,8 @@ class Indicador extends Component {
             _message: null,
             visible: false,
             tipo_mensaje: undefined,
-            _timer: undefined
+            _timer: undefined,
+            cookie: ''
         };
     }
 
@@ -41,7 +42,6 @@ class Indicador extends Component {
                 }
 
                 if (user.id_tv != undefined) {
-
                     socket.on(user.id_tv.toString(), (res) => {
                         this.props.dispatch(UsuarioActions.loginAsignacion(res));
                     });
@@ -56,10 +56,19 @@ class Indicador extends Component {
                 });
             }
         });
+        
+        AsyncStorage.getItem('menu_dashborad', (err, res) => {
+            if (!err && res && res != "undefined") {
+                var menu = JSON.parse(res);
+                if (menu.cookie) {
+                    this.setState({ cookie: menu.cookie });
+                }
+            }
+        });
     }
 
     render() {
-        const { vista, supervisor, _message, visible, tipo_mensaje } = this.state;
+        const { vista, supervisor, _message, visible, tipo_mensaje, cookie } = this.state;
         const opts = {
             height: (_height) ? (_height - (_height / 3)) : 500,
             width: (_width) ? (_width - 50) : 1200,
@@ -71,11 +80,11 @@ class Indicador extends Component {
         return (
             <div className="container indicadores">
                 {(vista == 1) &&
-                    <Supervisor changeView={this.handleChangeView.bind(this)} />
+                    <Supervisor changeView={this.handleChangeView.bind(this)} cookie={cookie} />
                 }
 
                 {(supervisor && vista == 0) &&
-                    <Gestor supervisor={supervisor} changeView={this.handleChangeView.bind(this)} />
+                    <Gestor supervisor={supervisor} changeView={this.handleChangeView.bind(this)} cookie={cookie} />
                 }
 
                 <Drawer

@@ -50,13 +50,14 @@ class Posicion extends Component {
     }
 
     hangleTarjeta(usuario, descripcion) {
+        const { cookie } = this.props;
         return (
             <div className="text-center">
                 <div style={{ height: 225, width: '100%' }}>
                     <img
                         height="225"
                         width="225"
-                        src={usuario.foto ? Function.getImage(usuario.foto) : ''}
+                        src={usuario.foto ? Function.getImage(usuario.foto, cookie) : ''}
                         className="avatar"
                         alt="Sin Imagen"
                     />
